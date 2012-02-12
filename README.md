@@ -1,2 +1,2 @@
 # SRS GAME
-![Timera and Tama](./srs_game.png)
+![Timera and Tama](http://github.com/jacksonwillis/srs_game/raw/master/srs_game.png)
