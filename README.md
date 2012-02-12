@@ -1,2 +1,2 @@
 # SRS GAME
-![srs_game.png](Timera and Tama)
+![Timera and Tama](srs_game.png)
