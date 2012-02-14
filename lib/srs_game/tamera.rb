@@ -1,88 +1,15 @@
 module SRSGame::Tamera
-  class << self
-    def greeting
-tamera = <<EOF
-mddmNmhyoo++///:::::::://////:::/:::::///+++ossssyyhhhdmmNNNNmNNmdyyyyyoyhhddhmd
-MMNdysso++//::::----------------::::::::::////+++++oosssyhddmNNNNNNmdhhhhyyydmdh
-Mmhysoo++//::------..............------:::::///////+++oossyyhdmmNNNNNNNmddmmmdhy
-Nhysoo+++/:::---....................----::::://////++++oossyyyhdmmmNNNNNNNNmmhhd
-dhyso+++///:----.....................----::://+++oossoooossysyyhhhdmmNNNNNMMMNNm
-dhsssso+////::----...--.........----:://+oossyyysyyyysyyyssssysyhhhhddmmNNNMMMMM
-dyhmddhhhysoo+/:::------......----://+++ooosso++///+osyyyhyyyyyyyyyyyhhdmmNNMMMM
-dmmdhhyyysoo+++//:::-:---------:::////+++++//:::::::://++ossyysyyyyyyyhhddmNNMMM
-mmdyo+/////////////::::::-----:::://///////:::::::::://///++oosssyyssyyhhddmNMMM
-mdso++///::////+++///:::::::::::///++++/////:::://///////++++ooosyyyyyyyhhdmNNMM
-dhsoo++///::////+++++///:::::::///+++++/+++++++++oooo++++++++ooossyyyyyyhhdmmNMM
-dhssooo++++++++++ooooo+//:--:://+ooo++osssssyhhddhhyysssoooooooooosyyyyyyhhmmNNM
-mhysssssooooosssssssssso/:---://oosoosssyy/:ddydNNNmmmdhyssooooooosyyyyyyhhdmNNN
-mdyyyyyyhhydmhhdmmhyssso+/---:/+oosoosss+:..smmddhsoooooo++++++ooosyyyyyyhddmNmd
-mdyhdmmNms:smhhmmNs/oooo+/-.-:/++ooo+o+/////+++++//++++//////+++oosyyyyyyhddmmmd
-mhyyyyssssoohhhhhy+/+/+o+/---:/++++o+///+++++++++++++//////////+oosyyyyyyhddmmmh
-dhsooooo++++++++++++//++/::-::/++++++//:://////////:::::::::///++ossyyyhhhdddmmh
-ysoo++++++++ooo+++/://++/::::://++++///::---------------:::://+++oossyyhhdddmmmm
-oo++++/////////:::::////::--:::///////:::-------...-----:::////+++oosyyhhddddmmm
-/+/+++//::------::////:::---:::///////:::--.-::.....---::::////+++oossyhddddmmmd
-:+//+++/::-----:::://:::::---::///+/////:--...........---:://///+++oosyhdddmmNNN
--++/++++/:------:-:/+/::::----://+++++ooo+/--......--.---::::////++oosyhdddmmMMM
--/+//++/::-------:/oo//::-----::/+ooo+++oso+/:--..--------::::///++oosyydddmNMMM
-./+////:::------:/os+//:--...---:/+++///+so+++/:----------:::://+++oossyhddmNMMM
-.:+////:::----::/+oo:/:--......--://:::/ooo++/++/::-----:::::://+++oossyhdmmNMMM
-`-/////::::--::/+oo+///:-.....-::///+osoo+++///+++/:::::::://///+++oossyhdmmMMMM
-`./+/////::::://+o+///+//:---::/osssoooo++/////+++oo+///////////++++oosyhdmNMMMM
-`.:///++///////++++///++++////+ossooo+++++/+++++++ooss+/////////++++oosydmmNMMMM
- `.:+/++oo++/////+++/++/+++++ooooo+++//////++++++oosshs+////////+++oossyhmNMMMMM
-  `-///++++++////os++/++++///::::://+++ooosoosysshddhyy+/://///+++ooosyhdmNMMMMM
-  `.:///++++////+ydhyyyssooooo+++oooosys+++:.:+--shsoos+:::///++oooosshdmNMMMMMM
-   `.:///++///://smyyhh+/+oooooooo+:-:+/`.--`-+o+oo++o+/::///++oooossyhmNMMMMMMM
-    `.:///////::/ohs+oo/:.-.:..-::.   ..``./::osooo++////://++oooossyhdNMMMMMMMM
-     `.-////+/:::/os+oooo::.``  ```    .-:+oooooo+++//////+++oooossyhdNNMMMMMMMM
-      ``-///++//:/+++oooooo//:....-..-:/+o+ooooo++////////+oooosssyhmNNMMMMMMMMM
-        `.://++////+++oosoo++/::///::::::/+ooo+++/////+///+oosssyhdmNNMMMMMMMMMM
-         `.-/++++//++++oosso++///////+++oooo++++/////++//+ooosyyhdmNNNMNNNNMMMMM
-          ``.:+/+///++++++oooooooooooooooo+//////////+///+ossyyhdmNNNNNNNNNMMMMM
-            `.-/+++/:/+++++++++++++++++/////////:///////+osyyhdmmNNNNNNNNNNNMMMM
-             ``.:/++/::///////++////////:::::::::::://++osyhhdmNNNNNNNNNNNNNNMMM
-               ``.:++/::////::::::::::------------::/+osyhhdmNNNNNNNNmmmmNNNNMMM
-                 ``-/+/::::::::------......--.----:/+oshhdmNNNNNNNmmmmmmNNNNNMMM
-                   `.-/+:----:-------.-......-----/+syddmNNMNNNNmmmmmmmmmmNNNMMM
-                    ``.://-------------------::::/oydmNNNNNNmmdmmmmmmmmmmmNNMMMM
-                      `.-//:--------::::::::////+sdmNNNNNNmmmmmmmmmmmmmmmNmNNMMM
-                       ``.://:--:::://///+//+++sdNMMNNNNmmmddmddmmmmmmmmmmmNNNNM
-                         `.-/+so+///+////++osdNMMMNNNNNmmmmddddmmmmmmmdmmmNNNNMM
-
-
-                      #####    ##    #    #  ######  #####     ##
-                        #     #  #   ##  ##  #       #    #   #  #
-                        #    #    #  # ## #  #####   #    #  #    #
-                        #    ######  #    #  #       #####   ######
-                        #    #    #  #    #  #       #   #   #    #
-                        #    #    #  #    #  ######  #    #  #    #
-
-
-                           #    #  #    #   ####   #    #   ####
-                           #   #   ##   #  #    #  #    #  #
-                           ####    # #  #  #    #  #    #   ####
-                           #  #    #  # #  #    #  # ## #       #
-                           #   #   #   ##  #    #  ##  ##  #    #
-                           #    #  #    #   ####   #    #   ####
-
-
-                              #   #   ####   #    #  #####
-                               # #   #    #  #    #  #    #
-                                #    #    #  #    #  #    #
-                                #    #    #  #    #  #####
-                                #    #    #  #    #  #   #
-                                #     ####    ####   #    #
-
-
-                              ####      #    #    #   ####
-                             #          #    ##   #  #
-                              ####      #    # #  #   ####
-                                  #     #    #  # #       #
-                             #    #     #    #   ##  #    #
-                              ####      #    #    #   ####
-EOF
-      tamera.split("\n").each { |line| puts line; sleep 0.05 }
-    end
+  def main_room
+    main = L.new(:name => "Main Room")
+    main.east = L.new(:name => "East Room")
+    main.east.south = L.new(:name => "South East Room")
+    main.east.south.south = L.new(:name => "South South East Room")
+    main.west = L.new(:name => "West Room")
+    main.west.west = L.new(:name => "Far West Room")
+    main.west.west.north = L.new(:name => "North West Room")
+    main
   end
+  def greeting
+    base64_zlib_inflate "eJydUdEKACEIe/crhP3/Px6V2XJyByeEpmsuNccw9/Qj8mX7euqwlYSnz5hS0yuU6kptogQkybfhMJ/+wowe+ikCZkUHf6OUTNo0oMl4payo/H934Y/dpZjI8275eQwPccqk4jsy0wEm0nuwhN/NuS7r7fgL/trxC77rB3sAsstclA=="
+  end  
 end
