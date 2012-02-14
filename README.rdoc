@@ -1,2 +1,9 @@
 = SRS GAME
 http://github.com/jacksonwillis/srs_game/raw/master/srs_game.png
+
+    rake clobber_rdoc  # Remove RDoc HTML files
+    rake play:tamera   # Play as the goddess Tamera
+    rake play:tia      # Play as a follower of the Cult of Tia
+    rake rdoc          # Build RDoc HTML files
+    rake rerdoc        # Rebuild RDoc HTML files
+    rake run           # Run Cucumber features

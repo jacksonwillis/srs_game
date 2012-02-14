@@ -10,7 +10,7 @@ namespace :play do
     SRSGame.play Tia, ENV
   end
 
-  desc "Play as a follower of the Cult of Tamera"
+  desc "Play as the goddess Tamera"
   task :tamera do
     require "srs_game/tamera"
     SRSGame.play Tamera, ENV
