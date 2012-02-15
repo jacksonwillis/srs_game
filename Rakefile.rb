@@ -1,5 +1,35 @@
-$LOAD_PATH << File.expand_path("lib")
+require "bundler"
 
+desc "Setup bundler"
+task :bundle do
+  begin
+    Bundler.setup(:default)
+  rescue Bundler::BundlerError => e
+    $stderr.puts e.message
+    $stderr.puts "Run `bundle install` to install missing gems"
+    exit e.status_code
+  end
+end
+
+require "cucumber/rake/task"
+
+namespace :cuke do
+  Cucumber::Rake::Task.new(:run) do |task|
+    task.cucumber_opts = ["-t", "@#{ENV["TAG"] || "all" }", "features"]
+  end
+end
+
+require "rdoc/task"
+
+RDoc::Task.new do |rdoc| 
+  rdoc.rdoc_dir = "doc"
+  rdoc.title = "srs_game"
+  rdoc.main = "README.rdoc"
+  rdoc.rdoc_files.include("README*")
+  rdoc.rdoc_files.include("lib/**/*.rb")
+end
+
+$LOAD_PATH << File.expand_path("lib")
 require "srs_game"
 include SRSGame
 
@@ -17,17 +47,4 @@ namespace :play do
   end
 end
 
-require "cucumber/rake/task"
-Cucumber::Rake::Task.new(:run) do |task|
-  task.cucumber_opts = ["features"]
-end
-
-require "rdoc/task"
-Rake::RDocTask.new do |rdoc| 
-  rdoc.rdoc_dir = "rdoc"
-  rdoc.title = "srs_game"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end
-
-task :default => ["rdoc"]
+task :default => ["bundle", "cuke:run", "rdoc"]

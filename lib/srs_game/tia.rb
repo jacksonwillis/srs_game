@@ -10,6 +10,7 @@ module SRSGame::Tia
     main
   end
   def greeting
+    # Yes, I compressed the string. Deal with it.
     base64_zlib_inflate "eJydUVEKQDEI+vcUgve/42MbWy2DweunMjEjUCPIk0fFFbuNubBA8eRTJ2hmp6a5S8OcKFniDoVy7Ddl9dSnCQHFRz6jjGBrGtJUvCAUl/97mn68ItPSvQ1sqhvS7fbJXzg+1sVJ3g=="
   end
 end

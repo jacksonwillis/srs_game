@@ -1,42 +1,9 @@
 require "zlib"
 require "base64"
-
-class String
-  SRS_ANSI_COLORS = {
-          clear: 0 ,
-          reset: 0 ,
-           bold: 1 ,
-           dark: 2 ,
-         italic: 3 ,
-      underline: 4 ,
-     underscore: 4 ,
-          blink: 5 ,
-    rapid_blink: 6 ,
-       negative: 7 ,
-      concealed: 8 ,
-  strikethrough: 9 ,
-          black: 30,
-            red: 31,
-          green: 32,
-         yellow: 33,
-           blue: 34,
-        magenta: 35,
-           cyan: 36,
-          white: 37,
-       on_black: 40,
-         on_red: 41,
-       on_green: 42,
-      on_yellow: 43,
-        on_blue: 44,
-     on_magenta: 45,
-        on_cyan: 46,
-       on_white: 47,
-  }
-
-  def ansi(code)
-    "\e[#{SRS_ANSI_COLORS[code]}m#{self}\e[0m"
-  end
-end
+require "readline"
+require "bundler/setup"
+Bundler.require(:default)
+include Term::ANSIColor
 
 module SRSGame
   module Helpers
@@ -52,7 +19,7 @@ module SRSGame
       colors = [:red, :yellow, :green, :cyan, :blue, :magenta]
       str.each_line do |line|
         if line =~ /\S/
-          print line.ansi(colors[0])
+          print line.__send__(colors[0])
           colors.rotate!
         else
           print line
@@ -68,8 +35,15 @@ module SRSGame
     def play(middleware, env)
       raise "No middleware for SRSGame.play" unless middleware
       extend middleware
-      rainbow_say greeting
-      p main_room, main_room.east
+
+      rainbow_say(greeting)
+      room = main_room
+
+      loop do
+        p room
+        room.enter
+        room = room.__send__(Readline.readline("$ ", true))
+      end
     end
   end
 
@@ -91,13 +65,14 @@ module SRSGame
       end
     end
     
-    attr_accessor :name, :description, :items
+    attr_accessor :name, :description, :items, :block
     attr_reader *L.directions
 
-    def initialize(params)
-      @name = params[:name]
-      @description = params[:description]
-      @items = []
+    def initialize(params, &block)
+      @name = params[:name].to_s
+      @description = params[:description].to_s
+      @items = params[:items].to_a or []
+      @block = block
     end
 
     # We have to create our own setter methods to do the mirrored direction relationships
@@ -121,7 +96,11 @@ module SRSGame
 
     def exits
       # Directions where __send__(dir) is truthy
-      L.directions.flatten.select { |dir| __send__(dir) }
+      L.directions.select { |dir| __send__(dir) }
+    end
+
+    def enter
+      block.call if block
     end
 
     def to_s

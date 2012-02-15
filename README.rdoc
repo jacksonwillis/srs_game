@@ -1,9 +1,29 @@
 = SRS GAME
+
 http://github.com/jacksonwillis/srs_game/raw/master/srs_game.png
 
-    rake clobber_rdoc  # Remove RDoc HTML files
-    rake play:tamera   # Play as the goddess Tamera
-    rake play:tia      # Play as a follower of the Cult of Tia
-    rake rdoc          # Build RDoc HTML files
-    rake rerdoc        # Rebuild RDoc HTML files
-    rake run           # Run Cucumber features
+== Welcome, folk
+
+This game is written in Ruby. Deal with it.
+
+== Playing the game
+
+To play with pre-made middleware, use rake on the command line:
+    $ rake play:tamera   # Play as the goddess Tamera
+    $ rake play:tia      # Play as a follower of the Cult of Tia
+or something like this in a ruby script:
+    require "srs_game"
+    require "srs_game/tia"
+    SRSGame.play SRSGame::Tia
+
+== -> All about U <-
+
+To use another middleware, try something like this:
+    module YourGameModule
+      #...
+    end
+
+    require "srs_game"
+    SRSGame.play YourGameModule
+
+Check out SRSGame::Tia and SRSGame::Tamera for examples of playable modules.
