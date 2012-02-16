@@ -21,12 +21,18 @@ end
 
 require "rdoc/task"
 
-RDoc::Task.new do |rdoc| 
-  rdoc.rdoc_dir = "doc"
-  rdoc.title = "srs_game"
-  rdoc.main = "README.rdoc"
-  rdoc.rdoc_files.include("README*")
-  rdoc.rdoc_files.include("lib/**/*.rb")
+rdoc_options = {
+  :rdoc         => "rdoc",
+  :clobber_rdoc => "rdoc:clean",
+  :rerdoc       => "rdoc:force"
+}
+
+RDoc::Task.new(rdoc_options) do |rdoc| 
+    rdoc.rdoc_dir = "doc"
+    rdoc.title = "srs_game"
+    rdoc.main = "README.rdoc"
+    rdoc.rdoc_files.include("README*")
+    rdoc.rdoc_files.include("lib/**/*.rb")
 end
 
 $LOAD_PATH << File.expand_path("lib")
@@ -47,4 +53,4 @@ namespace :play do
   end
 end
 
-task :default => ["bundle", "cuke:run", "rdoc"]
+task :default => ["bundle", "cuke:run", "rdoc:force"]
