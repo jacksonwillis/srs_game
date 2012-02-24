@@ -143,8 +143,6 @@ module SRSGame
       def directions
         direction_relationships.flatten
       end
-
-      def 
     end
     
     attr_accessor :name, :description, :items, :block
