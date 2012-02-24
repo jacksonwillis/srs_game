@@ -1,3 +1,7 @@
+################
+# Bundler      #
+################
+
 require "bundler"
 
 desc "Setup bundler"
@@ -11,6 +15,10 @@ task :bundle do
   end
 end
 
+################
+# Cucumber     #
+################
+
 require "cucumber/rake/task"
 
 namespace :cuke do
@@ -19,12 +27,16 @@ namespace :cuke do
   end
 end
 
+################
+# RDoc         #
+################
+
 require "rdoc/task"
 
 rdoc_options = {
-  :rdoc         => "rdoc",
+  :rdoc  => "rdoc",
   :clobber_rdoc => "rdoc:clean",
-  :rerdoc       => "rdoc:force"
+  :rerdoc => "rdoc:force"
 }
 
 RDoc::Task.new(rdoc_options) do |rdoc| 
@@ -34,6 +46,10 @@ RDoc::Task.new(rdoc_options) do |rdoc|
     rdoc.rdoc_files.include("README*")
     rdoc.rdoc_files.include("lib/**/*.rb")
 end
+
+################
+# Play         #
+################
 
 $LOAD_PATH << File.expand_path("lib")
 require "srs_game"
@@ -52,5 +68,9 @@ namespace :play do
     SRSGame.play Tamera, ENV
   end
 end
+
+################
+# Default      #
+################
 
 task :default => ["bundle", "cuke:run", "rdoc:force"]

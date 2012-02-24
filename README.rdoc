@@ -2,23 +2,37 @@
 
 http://github.com/jacksonwillis/srs_game/raw/master/srs_game.png
 
-== Welcome, folk
+== Welcome
 
-This game is written in Ruby. Deal with it.
+SRS GAME is written in the Ruby[link:http://ruby_lang.org/] programming language.
 
-== Playing the game
+== Dependencies
 
-To play with pre-made middleware, use rake on the command line:
+SRS GAME uses Bundler to handle dependencies. Install with
+    $ gem install bundler
+and run with
+    $ bundle install
+in your SRS GAME directory before playing.
+
+== Playing the game with Rake
+
+To play, use Rake on the command line:
     $ rake play:tamera   # Play as the goddess Tamera
     $ rake play:tia      # Play as a follower of the Cult of Tia
-or something like this in a ruby script:
+
+=== Command-line Arguments
+
+srs_game takes arguments on the command line. For example:
+    $ rake play:tamera SAYS_HOWDY_PARTNER=true
+
+== Scripting
+
+Try something like this in a ruby script:
     require "srs_game"
     require "srs_game/tia"
     SRSGame.play SRSGame::Tia
 
-== -> All about U <-
-
-To use another middleware, try something like this:
+To use another game module, try something like this:
     module YourGameModule
       #...
     end
@@ -26,4 +40,12 @@ To use another middleware, try something like this:
     require "srs_game"
     SRSGame.play YourGameModule
 
-Check out SRSGame::Tia and SRSGame::Tamera for examples of playable modules.
+Check out
+SRSGame::Tia
+(Github[link:https://github.com/jacksonwillis/srs_game/blob/master/lib/srs_game/tia.rb],
+RDoc[link:http://rubydoc.info/github/jacksonwillis/srs_game/master/SRSGame/Tia])
+and
+SRSGame::Tamera
+(Github[link:https://github.com/jacksonwillis/srs_game/blob/master/lib/srs_game/tamera.rb],
+RDoc[link:http://rubydoc.info/github/jacksonwillis/srs_game/master/SRSGame/Tamera])
+for examples of playable modules.

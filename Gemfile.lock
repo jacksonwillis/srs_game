@@ -21,7 +21,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler
   cucumber
   highline
   rdoc
+  term-ansicolor

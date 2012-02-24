@@ -1,16 +1,27 @@
+# -*- coding: UTF-8 -*-
+
 module SRSGame::Tamera
   def main_room
-    main = L.new(:name => "Main Room")
-    main.east = L.new(:name => "East Room") { puts "Welcome to the East Room!" }
-    main.east.south = L.new(:name => "South East Room")
-    main.east.south.south = L.new(:name => "South South East Room")
-    main.west = L.new(:name => "West Room")
-    main.west.west = L.new(:name => "Far West Room")
-    main.west.west.north = L.new(:name => "North West Room")
+    main = L.new(:name => "the Main Room")
+    main.east = L.new(:name => "the East Room") do |room|
+      room.items << I.new(:name => "Golden Lamp") if rand < 0.25
+      room.on_enter { puts "LOL" }
+    end
+    main.east.south = L.new(:name => "a creepy dungeon")
+    main.east.south.south = L.new(:name => "Hell")
+    main.west = L.new(:name => "the West Room")
+    main.west.west = L.new(:name => "the Far West Room")
+    main.west.west.north = L.new(:name => "the North West Room")
     main
   end
+
   def greeting
-    # Yes, I compressed the string. Deal with it.
     base64_zlib_inflate "eJydUdEKACEIe/crhP3/Px6V2XJyByeEpmsuNccw9/Qj8mX7euqwlYSnz5hS0yuU6kptogQkybfhMJ/+wowe+ikCZkUHf6OUTNo0oMl4payo/H934Y/dpZjI8275eQwPccqk4jsy0wEm0nuwhN/NuS7r7fgL/trxC77rB3sAsstclA=="
-  end  
+  end
+
+  class Commands < SRSGame::Commands
+    def _exit(r)
+      exit
+    end
+  end
 end
