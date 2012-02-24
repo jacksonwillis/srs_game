@@ -148,7 +148,7 @@ module SRSGame
     end
     
     attr_accessor :name, :description, :items, :block
-    attr_reader *L.directions. :on_enter
+    attr_reader *L.directions, :on_enter
 
     def initialize(params, &block)
       @name = params[:name] || "Room"
