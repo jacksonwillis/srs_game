@@ -27,7 +27,7 @@ require "cucumber/rake/task"
 
 namespace :cuke do
   Cucumber::Rake::Task.new(:run) do |task|
-    task.cucumber_opts = ["-t", "@#{ENV["TAG"] || "all" }", "features"]
+    task.cucumber_opts = ["features"]
   end
 end
 

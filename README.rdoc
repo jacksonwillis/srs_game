@@ -21,7 +21,7 @@ To play, use Rake on the command line:
 
 === Command-line Arguments
 
-srs_game takes arguments[link:http://rdoc.info/github/jacksonwillis/srs_game/master/SRSGame/Settings.default_settings] on the command line. For example:
+SRS GAME takes arguments[link:http://rdoc.info/github/jacksonwillis/srs_game/master/SRSGame/Settings.default_settings] on the command line. For example:
     $ rake play:tamera SAYS_HOWDY_PARTNER=true
 
 == Scripting

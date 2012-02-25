@@ -164,7 +164,7 @@ module SRSGame
 
     # params:
     # :name:: Displayed when the item is regarded. (default: "Item")
-    def initialize(params)
+    def initialize(params = {})
       @name = params[:name] or "Item"
     end # def initialize
 
@@ -203,7 +203,7 @@ module SRSGame
     # * :on_enter:: Block called every time room is entered.
     #
     # &block:: called on initialization
-    def initialize(params, &block)
+    def initialize(params = {}, &block)
       @name = params[:name] || "a room"
       @description = params[:description].to_s
       @items = params[:items].to_a or []
