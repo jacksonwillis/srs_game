@@ -6,13 +6,11 @@ http://github.com/jacksonwillis/srs_game/raw/master/srs_game.png
 
 SRS GAME is written in the Ruby[link:http://ruby_lang.org/] programming language.
 
-== Dependencies
+== Installation
 
-SRS GAME uses Bundler to handle dependencies. Install with
-    $ gem install bundler
-and run with
+    $ git clone git@github.com:jacksonwillis/srs_game.git
+    $ gem install bundler[link:]
     $ bundle install
-in your SRS GAME directory before playing.
 
 == Playing the game with Rake
 

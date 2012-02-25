@@ -15,13 +15,19 @@ class Object
   end
 
   def unblank?
-    !blank?
+    !self.blank?
   end
 
   def to_sentence(options = {})
     words_connector = options[:words_connector] ||  ", "
     two_words_connector = options[:two_words_connector] || " and "
     last_word_connector = options[:last_word_connector] || ", and "
+
+    if options[:bold]
+      return to_sentence Array[self] unless respond_to? :map
+      map!(&:to_s)
+      map!(&:bold)
+    end
 
     case length
     when 0
@@ -109,7 +115,7 @@ module SRSGame
         else
           print line
         end
-        sleep (1.0 / greeting_speed)
+        sleep 1.0 / greeting_speed
       end
     end
   end
@@ -124,6 +130,10 @@ module SRSGame
 
     def initialize(params)
       @name = params[:name] or "Item"
+    end
+
+    def to_s
+      @name
     end
   end
 
@@ -146,7 +156,7 @@ module SRSGame
     end
     
     attr_accessor :name, :description, :items, :block
-    attr_reader *L.directions, :on_enter
+    attr_reader(*L.directions, :on_enter)
 
     def initialize(params, &block)
       @name = params[:name] || "Room"
@@ -201,8 +211,8 @@ module SRSGame
     def info
       o = "You find yourself in #{@name}. "
       o << "#{@description}. " if @description
-      o << "\nItems here are #{items.to_sentence}." if @items.unblank?
-      o << "\nExits are to the #{exits.to_sentence}." if exits.unblank?
+      o << "\nItems here are #{@items.map(&:to_s).to_sentence(:bold => true)}." if @items.unblank?
+      o << "\nExits are to the #{exits.to_sentence(:bold => true)}." if exits.unblank?
       o
     end
 
@@ -245,7 +255,6 @@ module SRSGame
 
     L.directions.each do |dir|
       define_method("_#{dir}") do |args|
-        p $room.exits
         if $room.exits.include?(dir)
           $room = $room.__send__(dir)
         else
@@ -266,12 +275,13 @@ module SRSGame
       command = middleware.const_get(:Commands).new
 
       rainbow_say(greeting)
+      puts
 
       puts "Howdy, partner!" if S[:says_howdy_partner].to_s.to_bool
 
       loop do
-        $room.enter
         puts $room.info
+        $room.enter
         
         input = Readline.readline("$ ", true)
         input.gsub!(/\$\((.*)\)/) { send(self, $1.to_s) }
