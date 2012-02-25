@@ -4,12 +4,13 @@ http://github.com/jacksonwillis/srs_game/raw/master/srs_game.png
 
 == Welcome
 
-SRS GAME is written in the Ruby[link:http://ruby_lang.org/] programming language.
+SRS GAME is written in the Ruby[link:http://ruby_lang.org/] 1.9.3 programming language.
 
 == Installation
 
     $ git clone git@github.com:jacksonwillis/srs_game.git
-    $ gem install bundler[link:http://gembundler.com/]
+    $ cd srs_game
+    $ gem install bundler
     $ bundle install
 
 == Playing the game with Rake
