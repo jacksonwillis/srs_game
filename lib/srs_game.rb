@@ -12,11 +12,15 @@ include Term::ANSIColor
 class Object
   def blank?
     respond_to?(:empty?) ? empty? : !self
-  end
+  end # blank?
 
   def unblank?
     !self.blank?
-  end
+  end # def unblank?
+
+  def command_pp
+    to_s.gsub(/^_/, "")
+  end # def command_pp
 
   def to_sentence(options = {})
     words_connector = options[:words_connector] ||  ", "
@@ -27,7 +31,7 @@ class Object
       return to_sentence Array[self] unless respond_to? :map
       map!(&:to_s)
       map!(&:bold)
-    end
+    end # if
 
     case length
     when 0
@@ -38,9 +42,9 @@ class Object
       "#{self[0]}#{two_words_connector}#{self[1]}"
     else
       "#{self[0...-1].join(words_connector)}#{last_word_connector}#{self[-1]}"
-    end
-  end
-end
+    end # case
+  end # def to_sentence
+end # class Object
 
 class String
   TRUE_WORDS = %w{t true yes y}
@@ -48,16 +52,16 @@ class String
 
   def numeric?
     !!Float(self) rescue false
-  end
+  end # def numeric?
 
   def to_bool
     if TRUE_WORDS.include?(downcase) then true
-    elsif FALSE_WORDS.include?(downcase) then false end
+    elsif FALSE_WORDS.include?(downcase) then false end # if
   end
 
   def is_boolean?
     !to_bool.nil?
-  end
+  end # def is_boolean?
 
   def args
     strip!
@@ -68,22 +72,22 @@ class String
 
       if arg.boolean? then arg.to_bool
       elsif arg.numeric? then Float(arg)
-      else arg end
-    end
-  end
+      else arg end # if
+    end # map
+  end # def args
 
   def args?
     !args.empty?
-  end
+  end # def args
 
   def words
     scan(/\S+/)
-  end
+  end # def words
   
   def remove_first_word
     gsub(/^\S+\s*/, "")
-  end
-end
+  end # def remove_first_word
+end # class String
 
 class Hash
   def +(add)
@@ -91,18 +95,18 @@ class Hash
     self.each{|k,v| temp[k] = v}
     add.each{|k,v| temp[k] = v}
     temp
-  end
-end
+  end # def +
+end # class Hash
 
 module SRSGame
   module Helpers
     def base64_zlib_deflate(s)
       Base64.encode64(Zlib::Deflate.deflate(s))
-    end
+    end # def base64_zlib_deflate
 
     def base64_zlib_inflate(s)
       Zlib::Inflate.inflate(Base64.decode64(s))
-    end
+    end # def base64_zlib_inflate
 
     def rainbow_say(str)
       greeting_speed = S[:greeting_speed].to_f
@@ -114,11 +118,11 @@ module SRSGame
           colors.rotate!
         else
           print line
-        end
+        end # if
         sleep 1.0 / greeting_speed
-      end
-    end
-  end
+      end # each_line
+    end # def rainbow_say
+  end # module Helpers
 
   include Helpers
 
@@ -130,12 +134,12 @@ module SRSGame
 
     def initialize(params)
       @name = params[:name] or "Item"
-    end
+    end # def initialize
 
     def to_s
       @name
-    end
-  end
+    end # def to_s
+  end # class Item
 
   # SRSGame::L is a shortcut for SRSGame::Location
   class Location; end; L = Location # :nodoc:
@@ -144,16 +148,16 @@ module SRSGame
     class << self
       def direction_relationships
         [["north", "south"], ["east", "west"], ["up", "down"]]
-      end
+      end # def direction_relationships
 
       def mirrored_directions
         direction_relationships + direction_relationships.map { |a| a.reverse }
-      end
+      end # def mirrored_directions
 
       def directions
         direction_relationships.flatten
-      end
-    end
+      end # def directions
+    end # class << self
     
     attr_accessor :name, :description, :items, :block
     attr_reader(*L.directions, :on_enter)
@@ -166,47 +170,40 @@ module SRSGame
       @on_enter, @on_leave = nil
 
       @block.call(self) if block
-    end
+    end # def initialize
 
     # We have to create our own setter methods to do the mirrored direction relationships
     L.mirrored_directions.each do |dir|
       direction, opposite = *dir
-      # Old code:
-      #     eval <<-EOS
-      #       def #{direction}=(loc)
-      #         @#{direction} = loc
-      #         @#{direction}.#{opposite} = self unless @#{direction}.#{opposite}
-      #       end
-      #     EOS
       define_method(direction + "=") do |loc|
         # set @direction to loc
         instance_variable_set "@" + direction, loc
         # _direction is @direction
         _direction = instance_variable_get("@" + direction)
         _direction.__send__(opposite + "=", self) unless _direction.__send__(opposite)
-      end
-    end
+      end # define_method
+    end # each
 
     def exits
       # Directions where __send__(dir) is truthy
       L.directions.select { |dir| __send__(dir) }
-    end
+    end # def exits
 
     def on_enter(&b)
       @on_enter = b
-    end
+    end # def on_enter
 
     def on_leave(&b)
       @on_leave = b
-    end
+    end # def on_leave
 
     def enter
       @on_enter.call(self) if @on_enter
-    end
+    end # def enter
 
     def leave
       @on_leave.call(self) if @on_leave
-    end
+    end # def leave
 
     def info
       o = "You find yourself in #{@name}. "
@@ -214,12 +211,12 @@ module SRSGame
       o << "\nItems here are #{@items.map(&:to_s).to_sentence(:bold => true)}." if @items.unblank?
       o << "\nExits are to the #{exits.to_sentence(:bold => true)}." if exits.unblank?
       o
-    end
+    end # def info
 
     def to_s
       "#<SRSGame::Location #{@name.inspect} @items=#{@items.inspect} exits=#{exits.inspect}>"
-    end
-  end
+    end # def to_s
+  end # class Location
 
   # SRSGame::S is a shortcut for SRSGame::Settings
   class Settings; end; S = Settings # :nodoc:
@@ -232,26 +229,27 @@ module SRSGame
         @env ||= default_settings
         # Add what we are seeding to @env
         @env += seed
-      end
+      end # def seed
 
       # S[:foo] is the same as S.env["FOO"]
       def [](key)
         @env[key.to_s.upcase]
-      end
+      end # def []
 
       def default_settings
         {
           "GREETING_SPEED" => 20,
-          "SAYS_HOWDY_PARTNER" => false
+          "SAYS_HOWDY_PARTNER" => false,
+          "MATCHES_SHORT_METHODS" => true
         }
-      end
-    end
-  end
+      end # def default_settings
+    end # class << self
+  end # class Settings
 
   class Commands
     def method_missing(m, a)
       puts "#{self.class}##{m}: not found".red
-    end
+    end # def method_missing
 
     L.directions.each do |dir|
       define_method("_#{dir}") do |args|
@@ -259,10 +257,32 @@ module SRSGame
           $room = $room.__send__(dir)
         else
           puts "NOPE. Can't go that way."
-        end
-      end
-    end
-  end
+        end # if
+      end # define_method
+    end # each
+
+    def callable_methods
+      methods.grep(/^_\w+[^_]$/)
+    end # def callable_methods
+
+    def matching_methods(s='', m=callable_methods)
+      # build a regex which starts with ^ (beginning)
+      # take every letter of the method_name
+      #   insert "(.*?)" instead, which means: match anything and take the smallest match
+      #   and insert the letter itself (but escape regex chars)
+      #
+      # for example s='matz'
+      # => /^(.*?)m(.*?)a(.*?)t(.*?)z/
+      #
+      r=/^#{s.to_s.gsub(/./){"(.*?)"+Regexp.escape($&)}}/
+
+      # match all available methods for this regex
+      #  and sort them by the least matches of the "fill" regex groups
+      m.grep(r).sort_by do |i|
+        i.to_s.match(r).captures.map(&:size) << i
+      end # sort_by
+    end # def matching_methods
+  end # class Commands
 
   class << self
     def play(middleware, env = {})
@@ -274,8 +294,7 @@ module SRSGame
       $room = main_room
       command = middleware.const_get(:Commands).new
 
-      rainbow_say(greeting)
-      puts
+      rainbow_say(greeting + "\n")
 
       puts "Howdy, partner!" if S[:says_howdy_partner].to_s.to_bool
 
@@ -284,15 +303,27 @@ module SRSGame
         $room.enter
         
         input = Readline.readline("$ ", true)
-        input.gsub!(/\$\((.*)\)/) { send(self, $1.to_s) }
 
         unless input.blank?
           method = input.words.first
           argument_string = input.remove_first_word
 
-          command.__send__("_#{method}", argument_string)
-        end
-      end
-    end
-  end
-end
+          if S[:matches_short_methods].to_s.to_bool
+            matches = command.matching_methods(method)
+            parsed_method = matches.first
+
+            if matches.length > 1
+              puts "#{method} matches multiple methods: #{matches.map(&:command_pp)}".magenta
+            end # if
+
+            if method != parsed_method
+              puts "#{method} ~> #{parsed_method.command_pp}".magenta
+            end # if
+          end # if
+
+          command.__send__(parsed_method, argument_string)
+        end # unless
+      end # loop
+    end # def play
+  end # class << self
+end # module SRSGame

@@ -20,5 +20,7 @@ module SRSGame::Tamera
     def _exit(r)
       exit
     end
+
+    def _exet(r);end;def _qq(r);end
   end
 end
