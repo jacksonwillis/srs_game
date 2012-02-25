@@ -10,17 +10,27 @@ Bundler.require(:default)
 include Term::ANSIColor
 
 class Object
+  # Returns true if false, nil, or self.empty?
   def blank?
     respond_to?(:empty?) ? empty? : !self
   end # blank?
 
+  # Opposite of Object#blank?
   def unblank?
     !self.blank?
   end # def unblank?
 
+  # Removes "_" from beginning of line
   def command_pp
     to_s.gsub(/^_/, "")
   end # def command_pp
+
+  # From ActiveSupport[http://api.rubyonrails.org/classes/Array.html#method-i-to_sentence].
+  # Converts the array to a comma-separated sentence where the last element is joined by the connector word. Options:
+  # * :words_connector:: - The sign or word used to join the elements in arrays with two or more elements (default: ", ")
+  # * :two_words_connector:: - The sign or word used to join the elements in arrays with two elements (default: " and ")
+  # * :last_word_connector:: - The sign or word used to join the last element in arrays with three or more elements (default: ", and ")
+  # * :bold:: - Bolds the elements being joined. (default: false)
 
   def to_sentence(options = {})
     words_connector = options[:words_connector] ||  ", "
@@ -28,7 +38,7 @@ class Object
     last_word_connector = options[:last_word_connector] || ", and "
 
     if options[:bold]
-      return to_sentence Array[self] unless respond_to? :map
+      return to_sentence Array[self] unless respond_to? :map!
       map!(&:to_s)
       map!(&:bold)
     end # if
@@ -50,19 +60,25 @@ class String
   TRUE_WORDS = %w{t true yes y}
   FALSE_WORDS = %w{f false no n}
 
+  # Does the string represent a numeral in Ruby?
   def numeric?
     !!Float(self) rescue false
   end # def numeric?
 
+  # Convert to boolean value
   def to_bool
     if TRUE_WORDS.include?(downcase) then true
     elsif FALSE_WORDS.include?(downcase) then false end # if
   end
 
-  def is_boolean?
+  # Can the string be converted to a boolean value?
+  def boolean?
     !to_bool.nil?
   end # def is_boolean?
 
+  # Turn the string in to an array of arguments.
+  # It tries to convert words into booleans and floats. Example:
+  #     "3.14 yes gaga false".args #=> [3.14, true, "gaga", false]
   def args
     strip!
 
@@ -80,34 +96,48 @@ class String
     !args.empty?
   end # def args
 
+  # Scans the string for groups of non-whitespace characters.
   def words
     scan(/\S+/)
   end # def words
   
+  # Removes the first group of non-whitespace characters.
   def remove_first_word
     gsub(/^\S+\s*/, "")
   end # def remove_first_word
 end # class String
 
 class Hash
+  # Add two hashes. Does not overwrite pre-existing values.
   def +(add)
     temp = {}
-    self.each{|k,v| temp[k] = v}
-    add.each{|k,v| temp[k] = v}
+    add.each { |k, v| temp[k] = v}
+    self.each { |k, v| temp[k] = v}
     temp
   end # def +
+
+  # Add two hashes. Overwrites pre-existing values, and is destructive.
+  def <<(add)
+    temp = {}
+    self.each { |k, v| temp[k] = v}
+    add.each { |k,v| temp[k] = v}
+    replace temp
+  end # def <<
 end # class Hash
 
 module SRSGame
   module Helpers
+    # Compress and base64 encode a string
     def base64_zlib_deflate(s)
-      Base64.encode64(Zlib::Deflate.deflate(s))
+      Base64.encode64(Zlib::Deflate.deflate(s, Zlib::BEST_COMPRESSION))
     end # def base64_zlib_deflate
 
+    # Base64 decode and decompress and a string
     def base64_zlib_inflate(s)
       Zlib::Inflate.inflate(Base64.decode64(s))
     end # def base64_zlib_inflate
 
+    # Output a string, colorfully.
     def rainbow_say(str)
       greeting_speed = S[:greeting_speed].to_f
       colors = [:red, :yellow, :green, :cyan, :blue, :magenta]
@@ -132,10 +162,13 @@ module SRSGame
   class Item # :doc:
     attr_accessor :name
 
+    # params:
+    # :name:: Displayed when the item is regarded. (default: "Item")
     def initialize(params)
       @name = params[:name] or "Item"
     end # def initialize
 
+    # Name of the item
     def to_s
       @name
     end # def to_s
@@ -154,6 +187,7 @@ module SRSGame
         direction_relationships + direction_relationships.map { |a| a.reverse }
       end # def mirrored_directions
 
+      # All directions available
       def directions
         direction_relationships.flatten
       end # def directions
@@ -162,9 +196,16 @@ module SRSGame
     attr_accessor :name, :description, :items, :block
     attr_reader(*L.directions, :on_enter)
 
+    # params:
+    # * :name:: Title of the room (default: "a room")
+    # * :description:: Displayed when the name is regarded.
+    # * :items:: Items available in the room. Stored in @items.
+    # * :on_enter:: Block called every time room is entered.
+    #
+    # &block:: called on initialization
     def initialize(params, &block)
-      @name = params[:name] || "Room"
-      @description = params[:description]
+      @name = params[:name] || "a room"
+      @description = params[:description].to_s
       @items = params[:items].to_a or []
       @block = block # @block is called on initialization
       @on_enter, @on_leave = nil
@@ -184,27 +225,32 @@ module SRSGame
       end # define_method
     end # each
 
+    # Available directions (where __send__(dir) is truthy)
     def exits
-      # Directions where __send__(dir) is truthy
       L.directions.select { |dir| __send__(dir) }
     end # def exits
 
+    # Set @on_enter to &b
     def on_enter(&b)
       @on_enter = b
     end # def on_enter
 
+    # Set @on_leave to &b
     def on_leave(&b)
       @on_leave = b
     end # def on_leave
 
+    # Call @on_enter
     def enter
       @on_enter.call(self) if @on_enter
     end # def enter
 
+    # Call @on_leave
     def leave
       @on_leave.call(self) if @on_leave
     end # def leave
 
+    # Information displayed when a room is entered.
     def info
       o = "You find yourself in #{@name}. "
       o << "#{@description}. " if @description
@@ -225,10 +271,10 @@ module SRSGame
     class << self
       attr_reader :env
 
+      # Add what we are seeding to @env
       def seed(seed)
         @env ||= default_settings
-        # Add what we are seeding to @env
-        @env += seed
+        @env << seed
       end # def seed
 
       # S[:foo] is the same as S.env["FOO"]
@@ -265,6 +311,7 @@ module SRSGame
       methods.grep(/^_\w+[^_]$/)
     end # def callable_methods
 
+    # From GoRuby[link:https://github.com/ruby/ruby/blob/trunk/golf_prelude.rb]
     def matching_methods(s='', m=callable_methods)
       # build a regex which starts with ^ (beginning)
       # take every letter of the method_name
@@ -285,6 +332,7 @@ module SRSGame
   end # class Commands
 
   class << self
+    # Main loop
     def play(middleware, env = {})
       raise "No middleware for SRSGame.play" unless middleware
       extend middleware
