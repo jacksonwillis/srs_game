@@ -26,30 +26,9 @@ To play, use Rake on the command line:
 SRS GAME takes arguments[link:http://rdoc.info/github/jacksonwillis/srs_game/master/SRSGame/Settings.default_settings] on the command line. For example:
     $ rake play:tamera SAYS_HOWDY_PARTNER=true
 
-== Scripting
+== Extension
 
-Try something like this in a ruby script:
-    require "srs_game"
-    require "srs_game/tia"
-    SRSGame.play SRSGame::Tia
-
-To use another game module, try something like this:
-    module YourGameModule
-      #...
-    end
-
-    require "srs_game"
-    SRSGame.play YourGameModule
-
-Check out
-SRSGame::Tia
-(Github[link:https://github.com/jacksonwillis/srs_game/blob/master/lib/srs_game/tia.rb],
-RDoc[link:http://rubydoc.info/github/jacksonwillis/srs_game/master/SRSGame/Tia])
-and
-SRSGame::Tamera
-(Github[link:https://github.com/jacksonwillis/srs_game/blob/master/lib/srs_game/tamera.rb],
-RDoc[link:http://rubydoc.info/github/jacksonwillis/srs_game/master/SRSGame/Tamera])
-for examples of playable modules.
+See EXTENSION.rdoc for information on extension.
 
 == License
 

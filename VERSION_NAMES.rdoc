@@ -1,0 +1,14 @@
+= Version names for SRS GAME
+== Version 1
+* Agatha
+* Alexandra
+* Alexis
+* Alice
+* Amelia
+* Andromache
+* Anika
+* Aphrodite
+* Artemis
+* Astrid
+* Athena
+* Aurelia
