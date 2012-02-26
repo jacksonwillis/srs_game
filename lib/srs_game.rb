@@ -8,6 +8,9 @@ require "term/ansicolor"
 include Term::ANSIColor
 
 class Object
+  TRUE_WORDS = %w{t true yes y}
+  FALSE_WORDS = %w{f false no n}
+
   # Returns true if false, nil, or self.empty?
   def blank?
     respond_to?(:empty?) ? empty? : !self
@@ -17,6 +20,18 @@ class Object
   def unblank?
     !self.blank?
   end # def unblank?
+
+  # Convert to boolean value
+  def to_bool
+    dc = to_s.downcase
+    if TRUE_WORDS.include?(dc) then true
+    elsif FALSE_WORDS.include?(dc) then false end # if
+  end # def to_bool
+
+  # Can the string be converted to a boolean value?
+  def boolean?
+    !to_bool.nil?
+  end # def is_boolean?
 
   # Removes "_" from beginning of line
   def command_pp
@@ -55,24 +70,10 @@ class Object
 end # class Object
 
 class String
-  TRUE_WORDS = %w{t true yes y}
-  FALSE_WORDS = %w{f false no n}
-
   # Does the string represent a numeral in Ruby?
   def numeric?
     !!Float(self) rescue false
   end # def numeric?
-
-  # Convert to boolean value
-  def to_bool
-    if TRUE_WORDS.include?(downcase) then true
-    elsif FALSE_WORDS.include?(downcase) then false end # if
-  end
-
-  # Can the string be converted to a boolean value?
-  def boolean?
-    !to_bool.nil?
-  end # def is_boolean?
 
   # Turn the string in to an array of arguments.
   # It tries to convert words into booleans and floats. Example:
@@ -228,7 +229,7 @@ module SRSGame
       L.directions.select { |dir| __send__(dir) }
     end # def exits
 
-    # Set @on_enter to &b
+    # Set {@on_enter} to &b
     def on_enter(&b)
       @on_enter = b
     end # def on_enter
@@ -240,6 +241,7 @@ module SRSGame
 
     # Call @on_enter
     def enter
+      puts info
       @on_enter.call(self) if @on_enter
     end # def enter
 
@@ -251,9 +253,9 @@ module SRSGame
     # Information displayed when a room is entered.
     def info
       o = "You find yourself in #{@name}. "
-      o << "#{@description}. " if @description
+      o << "#{@description}. " if @description.unblank?
       o << "\nItems here are #{@items.map(&:to_s).to_sentence(:bold => true)}." if @items.unblank?
-      o << "\nExits are to the #{exits.to_sentence(:bold => true)}." if exits.unblank?
+      o << "\nExits are #{exits.to_sentence(:bold => true)}." if exits.unblank?
       o
     end # def info
 
@@ -291,42 +293,60 @@ module SRSGame
   end # class Settings
 
   class Commands
-    def method_missing(m, a)
-      puts "#{self.class}##{m}: not found".red
-    end # def method_missing
+    class << self
+      def method_missing(m, a)
+        puts "#{self}##{m}: not found".red
+      end # def method_missing
 
-    L.directions.each do |dir|
-      define_method("_#{dir}") do |args|
-        if $room.exits.include?(dir)
-          $room = $room.__send__(dir)
-        else
-          puts "NOPE. Can't go that way."
-        end # if
-      end # define_method
-    end # each
+      def callable_methods
+        methods.grep(/^_\w+[^_]$/)
+      end # def callable_methods
 
-    def callable_methods
-      methods.grep(/^_\w+[^_]$/)
-    end # def callable_methods
+      # From GoRuby[link:https://github.com/ruby/ruby/blob/trunk/golf_prelude.rb]
+      def matching_methods(s='', m=callable_methods)
+        # build a regex which starts with ^ (beginning)
+        # take every letter of the method_name
+        #   insert "(.*?)" instead, which means: match anything and take the smallest match
+        #   and insert the letter itself (but escape regex chars)
+        #
+        # for example s='matz'
+        # => /^(.*?)m(.*?)a(.*?)t(.*?)z/
+        #
+        r=/^#{s.to_s.gsub(/./){"(.*?)"+Regexp.escape($&)}}/
 
-    # From GoRuby[link:https://github.com/ruby/ruby/blob/trunk/golf_prelude.rb]
-    def matching_methods(s='', m=callable_methods)
-      # build a regex which starts with ^ (beginning)
-      # take every letter of the method_name
-      #   insert "(.*?)" instead, which means: match anything and take the smallest match
-      #   and insert the letter itself (but escape regex chars)
-      #
-      # for example s='matz'
-      # => /^(.*?)m(.*?)a(.*?)t(.*?)z/
-      #
-      r=/^#{s.to_s.gsub(/./){"(.*?)"+Regexp.escape($&)}}/
+        # match all available methods for this regex
+        #  and sort them by the least matches of the "fill" regex groups
+        m.grep(r).sort_by do |i|
+          i.to_s.match(r).captures.map(&:size) << i
+        end # sort_by
+      end # def matching_methods
 
-      # match all available methods for this regex
-      #  and sort them by the least matches of the "fill" regex groups
-      m.grep(r).sort_by do |i|
-        i.to_s.match(r).captures.map(&:size) << i
-      end # sort_by
-    end # def matching_methods
+      #################################
+      # Methods available as commands #
+      #################################
+
+      L.directions.each do |dir|
+        define_method("_#{dir}") do |args|
+          if $room.exits.include?(dir)
+            $room = $room.__send__(dir)
+          else
+            puts "NOPE. Can't go that way."
+          end # if
+        end # define_method
+      end # each
+
+      def _exit(r)
+        exit
+      end
+
+      def _help(r)
+        puts "For help on a specific command, use `help [command]'"
+        puts "For a list of all commands, use `help --all'"
+      end
+
+      alias :_quit :_exit
+      alias :_? :_help
+    end # class << self
   end # class Commands
 
   class << self
@@ -339,25 +359,28 @@ module SRSGame
       Readline.completion_append_character = " "
 
       $room = main_room
-      $command = middleware.const_get(:Commands).new
+      command = middleware.const_get(:Commands)
 
       rainbow_say(greeting + "\n")
       puts "Howdy, partner!" if S[:says_howdy_partner].to_s.to_bool
 
+      @last_room = nil
+
       loop do
-        puts $room.info
-        $room.enter
+        $room.enter unless $room.eql? @last_room
+        @last_room = $room
         
-        if S[:matches_short_methods].to_s.to_bool
-          completion_proc = proc { |s| $command.matching_methods(s).map(&:command_pp) }
+        if S[:matches_short_methods].to_bool
+          completion_proc = proc { |s| command.matching_methods(s).map(&:command_pp) }
           Readline.completion_proc = completion_proc
         end # if
+
         input = Readline.readline("$ ", true)
 
         unless input.blank?
           method = input.words.first
           argument_string = input.remove_first_word
-          $command.__send__("_" + method.command_pp, argument_string)
+          command.__send__("_" + method.command_pp, argument_string)
         end # unless
       end # loop
     end # def play
