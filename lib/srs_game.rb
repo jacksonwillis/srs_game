@@ -3,9 +3,7 @@
 require "zlib"
 require "base64"
 require "readline"
-
-require "bundler/setup"
-Bundler.require(:default)
+require "term/ansicolor"
 
 include Term::ANSIColor
 
@@ -338,38 +336,28 @@ module SRSGame
       extend middleware
 
       Settings.seed(env)
+      Readline.completion_append_character = " "
 
       $room = main_room
-      command = middleware.const_get(:Commands).new
+      $command = middleware.const_get(:Commands).new
 
       rainbow_say(greeting + "\n")
-
       puts "Howdy, partner!" if S[:says_howdy_partner].to_s.to_bool
 
       loop do
         puts $room.info
         $room.enter
         
+        if S[:matches_short_methods].to_s.to_bool
+          completion_proc = proc { |s| $command.matching_methods(s).map(&:command_pp) }
+          Readline.completion_proc = completion_proc
+        end # if
         input = Readline.readline("$ ", true)
 
         unless input.blank?
           method = input.words.first
           argument_string = input.remove_first_word
-
-          if S[:matches_short_methods].to_s.to_bool
-            matches = command.matching_methods(method)
-            parsed_method = matches.first
-
-            if matches.length > 1
-              puts "#{method} matches multiple methods: #{matches.map(&:command_pp)}".magenta
-            end # if
-
-            if method != parsed_method
-              puts "#{method} ~> #{parsed_method.command_pp}".magenta
-            end # if
-          end # if
-
-          command.__send__(parsed_method, argument_string)
+          $command.__send__("_" + method.command_pp, argument_string)
         end # unless
       end # loop
     end # def play
