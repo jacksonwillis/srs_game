@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
 gem "rake"
-gem "cucumber"
-gem "rdoc"
+gem "cucumber", :group => :test
+gem "rdoc", :group => :development
 gem "term-ansicolor"
