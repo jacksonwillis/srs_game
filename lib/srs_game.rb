@@ -179,7 +179,7 @@ module SRSGame
   class Location # :doc:
     class << self
       def direction_relationships
-        [["north", "south"], ["east", "west"], ["up", "down"]]
+        [["north", "south"], ["east", "west"], ["up", "down"], ["in", "out"]]
       end # def direction_relationships
 
       def mirrored_directions
@@ -252,7 +252,7 @@ module SRSGame
 
     # Information displayed when a room is entered.
     def info
-      o = "You find yourself in #{@name}. "
+      o = "You find yourself #{@name}. "
       o << "#{@description}. " if @description.unblank?
       o << "\nItems here are #{@items.map(&:to_s).to_sentence(:bold => true)}." if @items.unblank?
       o << "\nExits are #{exits.to_sentence(:bold => true)}." if exits.unblank?
@@ -295,14 +295,14 @@ module SRSGame
   class Commands
     class << self
       def method_missing(m, a)
-        puts "#{self}##{m}: not found".red
+        puts "#{self}::#{m.downcase}: not found".red
       end # def method_missing
 
       def callable_methods
         methods.grep(/^_\w+[^_]$/)
       end # def callable_methods
 
-      # From GoRuby[link:https://github.com/ruby/ruby/blob/trunk/golf_prelude.rb]
+      # From GoRuby link:https://github.com/ruby/ruby/blob/trunk/golf_prelude.rb
       def matching_methods(s='', m=callable_methods)
         # build a regex which starts with ^ (beginning)
         # take every letter of the method_name
@@ -325,7 +325,9 @@ module SRSGame
       # Methods available as commands #
       #################################
 
+      # Define all directions as commands
       L.directions.each do |dir|
+
         define_method("_#{dir}") do |args|
           if $room.exits.include?(dir)
             $room = $room.__send__(dir)
@@ -333,17 +335,22 @@ module SRSGame
             puts "NOPE. Can't go that way."
           end # if
         end # define_method
+
       end # each
 
+      # Quit the game
       def _exit(r)
         exit
       end
 
+      # Display help text
       def _help(r)
-        puts "For help on a specific command, use `help [command]'"
+        puts "For help on a specific command, use `man [command]'".red.strikethrough + " " + "COMING SOON".underline
         puts "For a list of all commands, use `help --all'"
-      end
+        puts "All available commands:\n#{callable_methods.map(&:command_pp).to_sentence(:bold => true)}" if r =~ /--all/
+      end # def _help
 
+      # Alias commands
       alias :_quit :_exit
       alias :_? :_help
     end # class << self

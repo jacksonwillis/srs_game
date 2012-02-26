@@ -31,7 +31,6 @@ RDoc::Task.new(rdoc_options) do |rdoc|
     rdoc.title = "srs_game"
     rdoc.main = "README.rdoc"
     rdoc.rdoc_files.include("README.rdoc")
-    rdoc.rdoc_files.include("EXTENSION.rdoc")
     rdoc.rdoc_files.include("VERSION_NAMES.rdoc")
     rdoc.rdoc_files.include("lib/**/*.rb")
 end
