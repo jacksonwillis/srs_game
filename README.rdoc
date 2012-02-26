@@ -42,4 +42,4 @@ for examples of playable modules.
 
 == License
 
-:include:LICENSE
+SRS GAME is released under the zlib license. See LICENSE[link:https://github.com/jacksonwillis/srs_game/blob/master/LICENSE]
