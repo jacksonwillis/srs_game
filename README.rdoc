@@ -50,3 +50,7 @@ SRSGame::Tamera
 (Github[link:https://github.com/jacksonwillis/srs_game/blob/master/lib/srs_game/tamera.rb],
 RDoc[link:http://rubydoc.info/github/jacksonwillis/srs_game/master/SRSGame/Tamera])
 for examples of playable modules.
+
+== License
+
+:include:LICENSE
