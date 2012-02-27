@@ -1,4 +1,6 @@
+#!/usr/bin/env ruby
 # -*- coding: UTF-8 -*-
+# This file is part of SRS GAME <http://github.com/jacksonwillis/srs_game/>.
 
 module SRSGame::Tamera
   def main_room
