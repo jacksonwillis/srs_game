@@ -28,18 +28,16 @@ rdoc_options = {
 
 RDoc::Task.new(rdoc_options) do |rdoc| 
     rdoc.rdoc_dir = "doc"
-    rdoc.title = "srs_game"
+    rdoc.title = "SRS GAME"
     rdoc.main = "README.rdoc"
-    rdoc.rdoc_files.include("README.rdoc")
-    rdoc.rdoc_files.include("VERSION_NAMES.rdoc")
-    rdoc.rdoc_files.include("lib/**/*.rb")
+    rdoc.rdoc_files.include("README.rdoc", "VERSION_NAMES.rdoc", "lib/**/*.rb")
 end
 
 ################
 # Play         #
 ################
 
-$LOAD_PATH << File.expand_path("lib")
+$LOAD_PATH.unshift File.expand_path("lib")
 require "srs_game"
 include SRSGame
 
