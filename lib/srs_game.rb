@@ -101,7 +101,7 @@ class String
   def words
     scan(/\S+/)
   end # def words
-  
+
   # Removes the first group of non-whitespace characters.
   def remove_first_word
     gsub(/^\S+\s*/, "")
@@ -193,7 +193,7 @@ module SRSGame
         direction_relationships.flatten
       end # def directions
     end # class << self
-    
+
     attr_accessor :name, :description, :items, :block
     attr_reader(*L.directions, :on_enter)
 
@@ -378,7 +378,7 @@ module SRSGame
       loop do
         $room.enter unless $room.eql? @last_room
         @last_room = $room
-        
+
         if S[:matches_short_methods].to_bool
           completion_proc = proc { |s| command.matching_methods(s).map(&:command_pp) }
           Readline.completion_proc = completion_proc
