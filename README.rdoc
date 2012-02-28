@@ -28,7 +28,8 @@ SRS GAME takes arguments[link:http://rdoc.info/github/jacksonwillis/srs_game/mas
 
 == Extension
 
-For help using your own game module, see examples/pokemon_clone.rb
+For help using your own game module, see
+examples/pokemon_clone.rb[link:https://github.com/jacksonwillis/srs_game/blob/master/examples/pokemon_clone.rb]
 
 Check out
 SRSGame::Tia
