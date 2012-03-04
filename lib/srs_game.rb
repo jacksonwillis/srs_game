@@ -287,10 +287,14 @@ module SRSGame
     # Apply settings. TODO: make these things configurable.
     def self.apply!
       Readline.completion_append_character = " "
-      rainbow_say(greeting + "\n")
       puts "Howdy, partner!" if S[:says_howdy_partner].to_s.to_bool
-    end
+      if S[:matches_short_methods].to_bool
+        completion_proc = proc { |s| command.matching_methods(s).map(&:command_pp) }
+        Readline.completion_proc = completion_proc
+      end # if
+    end # self.apply!
 
+    # SRS GAME's default settings
     def self.default_settings
       {
         "GREETING_SPEED" => 20,
@@ -377,6 +381,8 @@ module SRSGame
 
     Settings.seed(env).apply!
 
+    rainbow_say(greeting + "\n")
+
     $room = main_room
     command = middleware.const_get(:Commands)
 
@@ -385,11 +391,6 @@ module SRSGame
     loop do
       $room.enter unless $room.eql? @last_room
       @last_room = $room
-
-      if S[:matches_short_methods].to_bool
-        completion_proc = proc { |s| command.matching_methods(s).map(&:command_pp) }
-        Readline.completion_proc = completion_proc
-      end # if
 
       input = Readline.readline("$ ", true)
 

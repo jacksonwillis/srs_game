@@ -15,15 +15,24 @@ SRS GAME is written in the Ruby[http://ruby_lang.org/] 1.9.3 programming languag
     $ gem install bundler
     $ bundle install
 
-== Playing the game with Rake
+== Playing the game
 
-To play, use Rake on the command line:
+=== without rake
+
+Just execute the file!
+
+    $ ruby lib/srs_game/tamera.rb   # Play as the goddess Tamera
+    $ ruby lib/srs_game/tia.rb      # Play as a follower of the Cult of Tia
+
+=== with Rake
+
     $ rake play:tamera   # Play as the goddess Tamera
     $ rake play:tia      # Play as a follower of the Cult of Tia
 
-=== Command-line Arguments
+SRS GAME, with rake, takes arguments
+{(default settings)}[http://rdoc.info/github/jacksonwillis/srs_game/master/SRSGame/Settings.default_settings]
+on the command line. For example:
 
-SRS GAME takes arguments[http://rdoc.info/github/jacksonwillis/srs_game/master/SRSGame/Settings.default_settings] on the command line. For example:
     $ rake play:tamera SAYS_HOWDY_PARTNER=true
 
 == Extension
