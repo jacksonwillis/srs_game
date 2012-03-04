@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 # This file is part of SRS GAME <http://github.com/jacksonwillis/srs_game/>.
 
-$LOAD_PATH.unshift File.expand_path("../../lib")
+$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + "../../../lib")
 
 require "cucumber/formatter/unicode"
 require "srs_game"
