@@ -179,20 +179,18 @@ module SRSGame
   class Location; end; L = Location # :nodoc:
 
   class Location # :doc:
-    class << self
-      def direction_relationships
-        [["north", "south"], ["east", "west"], ["up", "down"], ["in", "out"]]
-      end # def direction_relationships
+    def self.direction_relationships
+      [["north", "south"], ["east", "west"], ["up", "down"], ["in", "out"]]
+    end # def direction_relationships
 
-      def mirrored_directions
-        direction_relationships + direction_relationships.map { |a| a.reverse }
-      end # def mirrored_directions
+    def self.mirrored_directions
+      direction_relationships + direction_relationships.map { |a| a.reverse }
+    end # def mirrored_directions
 
-      # All directions available
-      def directions
-        direction_relationships.flatten
-      end # def directions
-    end # class << self
+    # All directions available
+    def self.directions
+      direction_relationships.flatten
+    end # def directions
 
     attr_accessor :name, :description, :items, :block
     attr_reader(*L.directions, :on_enter)
@@ -283,15 +281,15 @@ module SRSGame
       def [](key)
         @env[key.to_s.upcase]
       end # def []
-
-      def default_settings
-        {
-          "GREETING_SPEED" => 20,
-          "SAYS_HOWDY_PARTNER" => false,
-          "MATCHES_SHORT_METHODS" => true
-        }
-      end # def default_settings
     end # class << self
+
+    def self.default_settings
+      {
+        "GREETING_SPEED" => 20,
+        "SAYS_HOWDY_PARTNER" => false,
+        "MATCHES_SHORT_METHODS" => true
+      }
+    end # def default_settings
   end # class Settings
 
   class Commands
