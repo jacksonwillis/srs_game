@@ -321,6 +321,12 @@ module SRSGame
         end # sort_by
       end # def matching_methods
 
+      def parse(input)
+        method = input.words.first
+        argument_string = input.remove_first_word
+        __send__("_" + method.command_pp, argument_string)
+      end
+
       #################################
       # Methods available as commands #
       #################################
@@ -383,11 +389,7 @@ module SRSGame
 
       input = Readline.readline("$ ", true)
 
-      unless input.blank?
-        method = input.words.first
-        argument_string = input.remove_first_word
-        command.__send__("_" + method.command_pp, argument_string)
-      end # unless
+      command.parse(input) unless input.blank?
     end # loop
   end # def self.play
 end # module SRSGame
