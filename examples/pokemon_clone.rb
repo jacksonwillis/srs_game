@@ -66,9 +66,10 @@ module PokemonClone
     house
   end
 
-  class Commands < SRSGame::Commands; class << self
+  class Commands < SRSGame::Commands; end
+  class << Commands
 
-  end; end
+  end
 end
 
 SRSGame.play PokemonClone if __FILE__ == $0
