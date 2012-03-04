@@ -275,6 +275,7 @@ module SRSGame
       def seed(seed)
         @env ||= default_settings
         @env << seed
+        self
       end # def seed
 
       # S[:foo] is the same as S.env["FOO"]
@@ -282,6 +283,13 @@ module SRSGame
         @env[key.to_s.upcase]
       end # def []
     end # class << self
+
+    # Apply settings. TODO: make these things configurable.
+    def self.apply!
+      Readline.completion_append_character = " "
+      rainbow_say(greeting + "\n")
+      puts "Howdy, partner!" if S[:says_howdy_partner].to_s.to_bool
+    end
 
     def self.default_settings
       {
@@ -367,11 +375,7 @@ module SRSGame
     raise "No middleware for SRSGame.play" unless middleware
     extend middleware
 
-    Settings.seed(env)
-    Readline.completion_append_character = " "
-
-    rainbow_say(greeting + "\n")
-    puts "Howdy, partner!" if S[:says_howdy_partner].to_s.to_bool
+    Settings.seed(env).apply!
 
     $room = main_room
     command = middleware.const_get(:Commands)
