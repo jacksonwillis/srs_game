@@ -181,16 +181,16 @@ module SRSGame
   class Location # :doc:
     def self.direction_relationships
       [["north", "south"], ["east", "west"], ["up", "down"], ["in", "out"]]
-    end # def direction_relationships
+    end # def self.direction_relationships
 
     def self.mirrored_directions
       direction_relationships + direction_relationships.map { |a| a.reverse }
-    end # def mirrored_directions
+    end # def self.mirrored_directions
 
     # All directions available
     def self.directions
       direction_relationships.flatten
-    end # def directions
+    end # def self.directions
 
     attr_accessor :name, :description, :items, :block
     attr_reader(*L.directions, :on_enter)
@@ -289,7 +289,7 @@ module SRSGame
         "SAYS_HOWDY_PARTNER" => false,
         "MATCHES_SHORT_METHODS" => true
       }
-    end # def default_settings
+    end # def self.default_settings
   end # class Settings
 
   class Commands
@@ -356,40 +356,38 @@ module SRSGame
     end # class << self
   end # class Commands
 
-  class << self
-    # Main loop
-    def play(middleware, env = {})
-      raise "No middleware for SRSGame.play" unless middleware
-      extend middleware
+  # Main loop
+  def self.play(middleware, env = {})
+    raise "No middleware for SRSGame.play" unless middleware
+    extend middleware
 
-      Settings.seed(env)
-      Readline.completion_append_character = " "
+    Settings.seed(env)
+    Readline.completion_append_character = " "
 
-      rainbow_say(greeting + "\n")
-      puts "Howdy, partner!" if S[:says_howdy_partner].to_s.to_bool
+    rainbow_say(greeting + "\n")
+    puts "Howdy, partner!" if S[:says_howdy_partner].to_s.to_bool
 
-      $room = main_room
-      command = middleware.const_get(:Commands)
+    $room = main_room
+    command = middleware.const_get(:Commands)
 
-      @last_room = nil
+    @last_room = nil
 
-      loop do
-        $room.enter unless $room.eql? @last_room
-        @last_room = $room
+    loop do
+      $room.enter unless $room.eql? @last_room
+      @last_room = $room
 
-        if S[:matches_short_methods].to_bool
-          completion_proc = proc { |s| command.matching_methods(s).map(&:command_pp) }
-          Readline.completion_proc = completion_proc
-        end # if
+      if S[:matches_short_methods].to_bool
+        completion_proc = proc { |s| command.matching_methods(s).map(&:command_pp) }
+        Readline.completion_proc = completion_proc
+      end # if
 
-        input = Readline.readline("$ ", true)
+      input = Readline.readline("$ ", true)
 
-        unless input.blank?
-          method = input.words.first
-          argument_string = input.remove_first_word
-          command.__send__("_" + method.command_pp, argument_string)
-        end # unless
-      end # loop
-    end # def play
-  end # class << self
+      unless input.blank?
+        method = input.words.first
+        argument_string = input.remove_first_word
+        command.__send__("_" + method.command_pp, argument_string)
+      end # unless
+    end # loop
+  end # def self.play
 end # module SRSGame
