@@ -71,4 +71,4 @@ module PokemonClone
   end; end
 end
 
-SRSGame.play PokemonClone
+SRSGame.play PokemonClone if __FILE__ == $0

@@ -367,11 +367,11 @@ module SRSGame
       Settings.seed(env)
       Readline.completion_append_character = " "
 
-      $room = main_room
-      command = middleware.const_get(:Commands)
-
       rainbow_say(greeting + "\n")
       puts "Howdy, partner!" if S[:says_howdy_partner].to_s.to_bool
+
+      $room = main_room
+      command = middleware.const_get(:Commands)
 
       @last_room = nil
 
