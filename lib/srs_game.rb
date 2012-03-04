@@ -157,6 +157,45 @@ module SRSGame
 
   include Helpers
 
+  ######################################################
+  # From Dwemthy's Array by _why the lucky stiff       #
+  # http://mislav.uniqpath.com/poignant-guide/dwemthy/ #
+  ######################################################
+
+  class Traitable
+    # Get a metaclass for this class
+    def self.metaclass; class << self; self; end; end
+
+    # Advanced metaprogramming code for nice, clean traits
+    def self.traits( *arr )
+      return @traits if arr.empty?
+
+      # 1. Set up accessors for each variable
+      attr_accessor *arr
+
+      # 2. Add a new class method to for each trait.
+      arr.each do |a|
+        metaclass.instance_eval do
+          define_method( a ) do |val|
+            @traits ||= {}
+            @traits[a] = val
+          end # define_method
+        end # instance_eval
+      end # each
+
+      # 3. For each monster, the `initialize' method
+      #    should use the default number for each trait.
+      class_eval do
+        define_method( :initialize ) do
+          self.class.traits.each do |k,v|
+            instance_variable_set("@#{k}", v)
+          end # each
+        end # define_method
+      end # class_eval
+
+    end # def self.traits
+  end # class Traitable
+
   # SRSGame::I is a shortcut for SRSGame::Item
   class Item; end; I = Item # :nodoc:
 
