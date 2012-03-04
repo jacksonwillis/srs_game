@@ -1,5 +1,11 @@
+#!/usr/bin/env ruby
+# -*- coding: UTF-8 -*-
+# This file is part of SRS GAME <http://github.com/jacksonwillis/srs_game/>.
+
 $LOAD_PATH.unshift File.expand_path("lib")
+
 require "srs_game"
+
 include SRSGame
 
 module PokemonClone
@@ -48,7 +54,7 @@ module PokemonClone
 
   def main_room
     house = L.new(:name => "outside your house")
-    house.in = L.new(:name => "in your living room")
+    house.in = L.new(:name => "in your living room", :on_enter => -> { puts "Your mother greets you: \"Good morning, Red!\"" })
     house.in.up = L.new(:name => "at the top of your stairs")
 
     room = house.in.up.north = L.new(:name => "at the threshold your room")
@@ -65,4 +71,4 @@ module PokemonClone
   end; end
 end
 
-SRSGame.play PokemonClone
+SRSGame.play PokemonClone if __FILE__ == $0

@@ -28,18 +28,19 @@ SRS GAME takes arguments[link:http://rdoc.info/github/jacksonwillis/srs_game/mas
 
 == Extension
 
-For help using your own game module, see examples/pokemon_clone.rb
+For help using your own game module, see
+examples/pokemon_clone.rb[link:https://github.com/jacksonwillis/srs_game/blob/master/examples/pokemon_clone.rb]
 
 Check out
 SRSGame::Tia
-(Github[link:https://github.com/jacksonwillis/srs_game/blob/master/lib/srs_game/tia.rb],
+(Github[link:http://github.com/jacksonwillis/srs_game/blob/master/lib/srs_game/tia.rb],
 RDoc[link:http://rubydoc.info/github/jacksonwillis/srs_game/master/SRSGame/Tia])
 and
 SRSGame::Tamera
-(Github[link:https://github.com/jacksonwillis/srs_game/blob/master/lib/srs_game/tamera.rb],
+(Github[link:http://github.com/jacksonwillis/srs_game/blob/master/lib/srs_game/tamera.rb],
 RDoc[link:http://rubydoc.info/github/jacksonwillis/srs_game/master/SRSGame/Tamera])
 for examples of playable modules.
 
 == License
 
-SRS GAME is released under the zlib license. See LICENSE[link:https://github.com/jacksonwillis/srs_game/blob/master/LICENSE]
+SRS GAME is released under the zlib license. See LICENSE[link:http://github.com/jacksonwillis/srs_game/blob/master/LICENSE]

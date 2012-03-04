@@ -1,4 +1,6 @@
+#!/usr/bin/env ruby
 # -*- coding: UTF-8 -*-
+# This file is part of SRS GAME <http://github.com/jacksonwillis/srs_game/>.
 
 require "zlib"
 require "base64"
@@ -99,7 +101,7 @@ class String
   def words
     scan(/\S+/)
   end # def words
-  
+
   # Removes the first group of non-whitespace characters.
   def remove_first_word
     gsub(/^\S+\s*/, "")
@@ -177,21 +179,19 @@ module SRSGame
   class Location; end; L = Location # :nodoc:
 
   class Location # :doc:
-    class << self
-      def direction_relationships
-        [["north", "south"], ["east", "west"], ["up", "down"], ["in", "out"]]
-      end # def direction_relationships
+    def self.direction_relationships
+      [["north", "south"], ["east", "west"], ["up", "down"], ["in", "out"]]
+    end # def direction_relationships
 
-      def mirrored_directions
-        direction_relationships + direction_relationships.map { |a| a.reverse }
-      end # def mirrored_directions
+    def self.mirrored_directions
+      direction_relationships + direction_relationships.map { |a| a.reverse }
+    end # def mirrored_directions
 
-      # All directions available
-      def directions
-        direction_relationships.flatten
-      end # def directions
-    end # class << self
-    
+    # All directions available
+    def self.directions
+      direction_relationships.flatten
+    end # def directions
+
     attr_accessor :name, :description, :items, :block
     attr_reader(*L.directions, :on_enter)
 
@@ -281,15 +281,15 @@ module SRSGame
       def [](key)
         @env[key.to_s.upcase]
       end # def []
-
-      def default_settings
-        {
-          "GREETING_SPEED" => 20,
-          "SAYS_HOWDY_PARTNER" => false,
-          "MATCHES_SHORT_METHODS" => true
-        }
-      end # def default_settings
     end # class << self
+
+    def self.default_settings
+      {
+        "GREETING_SPEED" => 20,
+        "SAYS_HOWDY_PARTNER" => false,
+        "MATCHES_SHORT_METHODS" => true
+      }
+    end # def default_settings
   end # class Settings
 
   class Commands
@@ -365,18 +365,18 @@ module SRSGame
       Settings.seed(env)
       Readline.completion_append_character = " "
 
-      $room = main_room
-      command = middleware.const_get(:Commands)
-
       rainbow_say(greeting + "\n")
       puts "Howdy, partner!" if S[:says_howdy_partner].to_s.to_bool
+
+      $room = main_room
+      command = middleware.const_get(:Commands)
 
       @last_room = nil
 
       loop do
         $room.enter unless $room.eql? @last_room
         @last_room = $room
-        
+
         if S[:matches_short_methods].to_bool
           completion_proc = proc { |s| command.matching_methods(s).map(&:command_pp) }
           Readline.completion_proc = completion_proc
