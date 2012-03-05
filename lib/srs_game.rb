@@ -206,6 +206,10 @@ module SRSGame
     def to_s
       name
     end # def to_s
+
+    # Defaults
+    name "Item"
+    interactable_as :item
   end # class Item
 
   # SRSGame::I is a shortcut for SRSGame::Item
