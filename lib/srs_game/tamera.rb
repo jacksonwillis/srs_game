@@ -8,10 +8,15 @@ include SRSGame
 
 # Play as the goddess Tamera
 module SRSGame::Tamera
+  class BallaAssSpoon < Item
+    name "Balla Ass Spoon"
+    interactable_as :spoon
+  end
+
   # Room where you begin in
   def main_room
     main = L.new(:name => "the Main Room")
-    main.east = L.new(:name => "the East Room", :items => [I.new(:name => "Balla Ass Spoon")])
+    main.east = L.new(:name => "the East Room", :items => [BallaAssSpoon.new])
     main.east.south = L.new(:name => "a creepy dungeon")
     main.east.south.south = L.new(:name => "Hell") { |room| room.on_enter { rainbow_say "Welcome\nto\nHell!\n" * 8 } }
     main.west = L.new(:name => "the West Room")
@@ -22,7 +27,7 @@ module SRSGame::Tamera
 
   # Emitted before the game starts
   def greeting
-    base64_zlib_inflate "eJydUdEKACEIe/crhP3/Px6V2XJyByeEpmsuNccw9/Qj8mX7euqwlYSnz5hS0yuU6kptogQkybfhMJ/+wowe+ikCZkUHf6OUTNo0oMl4payo/H934Y/dpZjI8275eQwPccqk4jsy0wEm0nuwhN/NuS7r7fgL/trxC77rB3sAsstclA=="
+    "\n #####   #####     ##       #     ####   ######\n #    #  #    #   #  #      #    #       #\n #    #  #    #  #    #     #     ####   #####\n #####   #####   ######     #         #  #\n #       #   #   #    #     #    #    #  #\n #       #    #  #    #     #     ####   ######\n\n\n #####   ######\n #    #  #\n #####   #####\n #    #  #\n #    #  #\n #####   ######\n\n\n  #####   ####\n    #    #    #\n    #    #    #\n    #    #    #\n    #    #    #\n    #     ####\n\n\n  #####    ##    #    #  ######  #####     ##\n    #     #  #   ##  ##  #       #    #   #  #\n    #    #    #  # ## #  #####   #    #  #    #\n    #    ######  #    #  #       #####   ######\n    #    #    #  #    #  #       #   #   #    #\n    #    #    #  #    #  ######  #    #  #    #\n\n"
   end
 end
 

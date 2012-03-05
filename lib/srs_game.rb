@@ -198,25 +198,18 @@ module SRSGame
     end # def self.traits
   end # class Traitable
 
-  class Item; end; # :nodoc:
-  # SRSGame::I is a shortcut for SRSGame::Item
-  I = Item
-
   # Any non-monster you can interact with in the game
-  class Item
-    attr_accessor :name
-
-    # params:
-    # :name:: Displayed when the item is regarded. (default: "Item")
-    def initialize(params = {})
-      @name = params[:name] or "Item"
-    end # def initialize
+  class Item < Traitable
+    traits :interactable_as, :name
 
     # Name of the item
     def to_s
-      @name
+      name
     end # def to_s
   end # class Item
+
+  # SRSGame::I is a shortcut for SRSGame::Item
+  I = Item
 
   class Location; end; # :nodoc:
   # SRSGame::L is a shortcut for SRSGame::Location
@@ -411,6 +404,12 @@ module SRSGame
         puts $room.info
       end
 
+      # Look at items
+      def _look_item(r)
+        puts "Room's items: #{$room.items}"
+        puts "Items that match #{r.inspect}: #{$room.items.select { |item| item.interactable_as.to_s =~ Regexp.new(r, :i) }}"
+      end
+
       # Display help text
       def _help(r)
         puts "For help on a specific command, use `man [command]'".red.strikethrough + " " + "COMING SOON".underline
@@ -431,7 +430,7 @@ module SRSGame
 
     Settings.seed(env)
 
-    rainbow_say(greeting + "\n")
+    rainbow_say(greeting)
 
     $room = main_room
     command = middleware.const_get(:Commands)

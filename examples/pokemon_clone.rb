@@ -8,15 +8,11 @@ include SRSGame
 
 module PokemonClone
   class Computer < Item
-    def use
-      puts "Using computer"
-    end
+    interactable_as :computer
   end
 
   class Bed < Item
-    def use
-      puts "Sleeping in computer"
-    end
+    interactable_as :bed
   end
 
   def greeting
