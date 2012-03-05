@@ -56,9 +56,7 @@ Check out
 SRSGame::Tamera
 ([Github](https://github.com/jacksonwillis/srs_game/blob/master/lib/srs_game/tamera.rb),
    [RDoc](http://rubydoc.info/github/jacksonwillis/srs_game/master/SRSGame/Tamera))
-
 and [examples/pokemon_clone.rb](https://github.com/jacksonwillis/srs_game/blob/master/examples/pokemon_clone.rb)
-
 for examples of playable modules.
 
 License
