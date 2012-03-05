@@ -323,16 +323,6 @@ module SRSGame
       end # def []
     end # class << self
 
-    # Apply settings. TODO: make these things configurable.
-    def self.apply!
-      Readline.completion_append_character = " "
-      puts "Howdy, partner!" if S[:says_howdy_partner].to_s.to_bool
-      if S[:matches_short_methods].to_bool
-        completion_proc = proc { |s| command.matching_methods(s).map(&:command_pp) }
-        Readline.completion_proc = completion_proc
-      end # if
-    end # self.apply!
-
     # SRS GAME's default settings
     def self.default_settings
       {
@@ -400,6 +390,11 @@ module SRSGame
         exit
       end
 
+      # Prints $room.info
+      def _look(r)
+        puts $room.info
+      end
+
       # Display help text
       def _help(r)
         puts "For help on a specific command, use `man [command]'".red.strikethrough + " " + "COMING SOON".underline
@@ -418,12 +413,19 @@ module SRSGame
     raise "No middleware for SRSGame.play" unless middleware
     extend middleware
 
-    Settings.seed(env).apply!
+    Settings.seed(env)
 
     rainbow_say(greeting + "\n")
 
     $room = main_room
     command = middleware.const_get(:Commands)
+
+    Readline.completion_append_character = " "
+    puts "Howdy, partner!" if S[:says_howdy_partner].to_s.to_bool
+    if S[:matches_short_methods].to_bool
+      completion_proc = proc { |s| command.matching_methods(s).map(&:command_pp) }
+      Readline.completion_proc = completion_proc
+    end # if
 
     @last_room = nil
 
