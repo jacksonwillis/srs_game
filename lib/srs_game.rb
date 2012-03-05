@@ -9,8 +9,11 @@ require "term/ansicolor"
 
 include Term::ANSIColor
 
+# Methods for every object
 class Object
+  # Words that become true when to_bool is called
   TRUE_WORDS = %w{t true yes y}
+  # Words that become false when to_bool is called
   FALSE_WORDS = %w{f false no n}
 
   # Returns true if false, nil, or self.empty?
@@ -126,7 +129,9 @@ class Hash
   end # def <<
 end # class Hash
 
+# The main SRS GAME namespace
 module SRSGame
+  # Helpful methods that are included throught out the project
   module Helpers
     # Compress and base64 encode a string
     def base64_zlib_deflate(s)
@@ -157,11 +162,8 @@ module SRSGame
 
   include Helpers
 
-  ######################################################
-  # From Dwemthy's Array by _why the lucky stiff       #
-  # http://mislav.uniqpath.com/poignant-guide/dwemthy/ #
-  ######################################################
-
+  # From Dwemthy's Array by _why the lucky stiff
+  # http://mislav.uniqpath.com/poignant-guide/dwemthy/
   class Traitable
     # Get a metaclass for this class
     def self.metaclass; class << self; self; end; end
@@ -196,10 +198,12 @@ module SRSGame
     end # def self.traits
   end # class Traitable
 
+  class Item; end; # :nodoc:
   # SRSGame::I is a shortcut for SRSGame::Item
-  class Item; end; I = Item # :nodoc:
+  I = Item
 
-  class Item # :doc:
+  # Any non-monster you can interact with in the game
+  class Item
     attr_accessor :name
 
     # params:
@@ -214,14 +218,18 @@ module SRSGame
     end # def to_s
   end # class Item
 
+  class Location; end; # :nodoc:
   # SRSGame::L is a shortcut for SRSGame::Location
-  class Location; end; L = Location # :nodoc:
+  L = Location
 
-  class Location # :doc:
+  # Anywhere you can 'go' in the game
+  class Location
+    # Directions and their opposites
     def self.direction_relationships
       [["north", "south"], ["east", "west"], ["up", "down"], ["in", "out"]]
     end # def self.direction_relationships
 
+    # Directions and their opposites and their opposites and their opposites
     def self.mirrored_directions
       direction_relationships + direction_relationships.map { |a| a.reverse }
     end # def self.mirrored_directions
@@ -231,16 +239,18 @@ module SRSGame
       direction_relationships.flatten
     end # def self.directions
 
-    attr_accessor :name, :description, :items, :block
-    attr_reader(*L.directions, :on_enter)
+    # Title of the room (default: "a room")
+    attr_accessor :name
+    # Description of the item. Displayed when the name is regarded.
+    attr_accessor :description
+    # Items available in the room. Stored in @items.
+    attr_accessor :items
+    attr_accessor :block
+    attr_reader(*L.directions)
+    # Block called every time room is entered.
+    attr_reader :on_enter
 
-    # params:
-    # * :name:: Title of the room (default: "a room")
-    # * :description:: Displayed when the name is regarded.
-    # * :items:: Items available in the room. Stored in @items.
-    # * :on_enter:: Block called every time room is entered.
-    #
-    # &block:: called on initialization
+    # &block(self) is called on initialization
     def initialize(params = {}, &block)
       @name = params[:name] || "a room"
       @description = params[:description].to_s
@@ -268,23 +278,23 @@ module SRSGame
       L.directions.select { |dir| __send__(dir) }
     end # def exits
 
-    # Set {@on_enter} to &b
+    # Set <tt>@on_enter</tt> to &b
     def on_enter(&b)
       @on_enter = b
     end # def on_enter
 
-    # Set @on_leave to &b
+    # Set <tt>@on_leave</tt> to &b
     def on_leave(&b)
       @on_leave = b
     end # def on_leave
 
-    # Call @on_enter
+    # Call <tt>@on_enter</tt>
     def enter
       puts info
       @on_enter.call(self) if @on_enter
     end # def enter
 
-    # Call @on_leave
+    # Call <tt>@on_leave</tt>
     def leave
       @on_leave.call(self) if @on_leave
     end # def leave
@@ -303,21 +313,23 @@ module SRSGame
     end # def to_s
   end # class Location
 
+  class Settings; end; # :nodoc:
   # SRSGame::S is a shortcut for SRSGame::Settings
-  class Settings; end; S = Settings # :nodoc:
+  S = Settings
 
-  class Settings # :doc:
+  # Game settings are stored in Settings.env
+  class Settings
     class << self
       attr_reader :env
 
-      # Add what we are seeding to @env
+      # Add what we are seeding to <tt>@env</tt>
       def seed(seed)
         @env ||= default_settings
         @env << seed
         self
       end # def seed
 
-      # S[:foo] is the same as S.env["FOO"]
+      # <tt>S[:foo]</tt> is the same as <tt>S.env["FOO"]</tt>
       def [](key)
         @env[key.to_s.upcase]
       end # def []
@@ -333,12 +345,15 @@ module SRSGame
     end # def self.default_settings
   end # class Settings
 
+  # Class methods beginning with `<tt>_</tt>' are available as commands during the game
   class Commands
     class << self
+      # Called when a non-existing command is entered during the game
       def method_missing(m, a)
         puts "#{self}::#{m.downcase}: not found".red
       end # def method_missing
 
+      # Methods that start with `<tt>_</tt>' and don't end with `<tt>_</tt>'
       def callable_methods
         methods.grep(/^_\w+[^_]$/)
       end # def callable_methods
@@ -362,6 +377,7 @@ module SRSGame
         end # sort_by
       end # def matching_methods
 
+      # Parse input and <tt>__send__</tt> it
       def parse(input)
         method = input.words.first
         argument_string = input.remove_first_word
