@@ -26,7 +26,7 @@ Playing the game
 Just execute the file!
 
     $ ruby lib/srs_game/tamera.rb   # Play as the goddess Tamera
-    $ ruby lib/srs_game/tia.rb      # Play as a follower of the Cult of Tia</code>
+    $ ruby lib/srs_game/tia.rb      # Play as a follower of the Cult of Tia
 
 ### With Rake
 
