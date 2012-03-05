@@ -33,11 +33,11 @@ Just execute the file!
     $ rake play:tamera   # Play as the goddess Tamera
     $ rake play:tia      # Play as a follower of the Cult of Tia
 
-SRS GAME, with Rake, takes arguments
-[(default settings)](https://rdoc.info/github/jacksonwillis/srs_game/master/SRSGame/Settings.default_settings)
-on the command line. For example:
+SRS GAME, with Rake, takes arguments on the command line. For example:
 
     $ rake play:tamera SAYS_HOWDY_PARTNER=true
+
+The default settings are defined in [Settings::default_settings](https://rdoc.info/github/jacksonwillis/srs_game/master/SRSGame/Settings.default_settings).
 
 Testing
 -------
@@ -52,7 +52,6 @@ Extension
 ---------
 
 Check out
-
 SRSGame::Tamera
 ([Github](https://github.com/jacksonwillis/srs_game/blob/master/lib/srs_game/tamera.rb),
    [RDoc](http://rubydoc.info/github/jacksonwillis/srs_game/master/SRSGame/Tamera))
