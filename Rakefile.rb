@@ -61,4 +61,4 @@ end
 # Default      #
 ################
 
-task :default => ["bundle", "cuke:run", "rdoc:force"]
+task :default => ["cuke:run", "rdoc:force"]
