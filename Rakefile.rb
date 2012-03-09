@@ -17,25 +17,6 @@ namespace :cuke do
 end
 
 ################
-# RDoc         #
-################
-
-require "rdoc/task"
-
-rdoc_options = {
-  :rdoc  => "rdoc",
-  :clobber_rdoc => "rdoc:clean",
-  :rerdoc => "rdoc:force"
-}
-
-RDoc::Task.new(rdoc_options) do |rdoc| 
-    rdoc.rdoc_dir = "doc"
-    rdoc.title = "SRS GAME"
-    rdoc.main = "README.rdoc"
-    rdoc.rdoc_files.include("README.rdoc", "VERSION_NAMES.rdoc", "lib/**/*.rb")
-end
-
-################
 # Play         #
 ################
 
@@ -61,4 +42,4 @@ end
 # Default      #
 ################
 
-task :default => ["cuke:run", "rdoc:force"]
+task :default => "cuke:run"
