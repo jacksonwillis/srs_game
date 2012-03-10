@@ -9,14 +9,19 @@ include SRSGame
 # Play as the goddess Tamera
 module SRSGame::Tamera
   class BallaAssSpoon < Item
-    name "Balla Ass Spoon"
+    name "a Balla Ass Spoon"
     interactable_as :spoon
+  end
+
+  class CrystalBall < Item
+    name "a Crystal Ball"
+    interactable_as :crystal
   end
 
   # Room where you begin in
   def main_room
     main = L.new(:name => "the Main Room")
-    main.east = L.new(:name => "the East Room", :items => [BallaAssSpoon.new])
+    main.east = L.new(:name => "the East Room", :items => [BallaAssSpoon.new, CrystalBall.new])
     main.east.south = L.new(:name => "a creepy dungeon")
     main.east.south.south = L.new(:name => "Hell") { |room| room.on_enter { rainbow_say "Welcome\nto\nHell!\n" * 8 } }
     main.west = L.new(:name => "the West Room")
