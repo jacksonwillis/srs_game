@@ -7,7 +7,7 @@ Feature: Locations
   Scenario: Use directions
     Given I have an example room with blank rooms in each direction
     Then the room to west of east room is the main room
-      And the room's exits include all directions
+    And the room's exits include all directions
 
   Scenario: Add an item to a room
     Given I have a room
