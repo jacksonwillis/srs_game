@@ -4,11 +4,17 @@
 
 require "rake"
 
+$LOAD_PATH.unshift File.expand_path("lib")
+require "srs_game"
+include SRSGame
+
 ################
 # Cucumber     #
 ################
 
 require "cucumber/rake/task"
+require "cucumber/formatter/unicode"
+require "rspec/expectations"
 
 namespace :cuke do
   Cucumber::Rake::Task.new(:run) do |task|
@@ -19,10 +25,6 @@ end
 ################
 # Play         #
 ################
-
-$LOAD_PATH.unshift File.expand_path("lib")
-require "srs_game"
-include SRSGame
 
 namespace :play do
   desc "Play as a follower of the Cult of Tia"
