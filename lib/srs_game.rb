@@ -249,9 +249,9 @@ module SRSGame
 
     # &block(self) is called on initialization
     def initialize(params = {}, &block)
-      @name = params[:name] || "a room"
+      @name = params[:name] or "a room"
       @description = params[:description].to_s
-      @items = params[:items].to_a or []
+      @items = params[:items].to_a.to_set or Set.new
       @block = block # @block is called on initialization
       @on_enter, @on_leave = nil
 
@@ -276,14 +276,10 @@ module SRSGame
     end # def exits
 
     # Set <tt>@on_enter</tt> to &b
-    def on_enter(&b)
-      @on_enter = b
-    end # def on_enter
+    def on_enter(&b) @on_enter = b end
 
     # Set <tt>@on_leave</tt> to &b
-    def on_leave(&b)
-      @on_leave = b
-    end # def on_leave
+    def on_leave(&b) @on_leave = b end
 
     # Call <tt>@on_enter</tt>
     def enter
