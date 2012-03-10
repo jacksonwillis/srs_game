@@ -1,2 +1,2 @@
-lib/**/*.rb
+lib/srs_game.rb
 *.md
