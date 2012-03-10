@@ -8,7 +8,9 @@ SRS GAME
 Welcome
 -------
 
-SRS GAME is written in the [Ruby](http://www.ruby-lang.org/) 1.9.3 programming language.
+SRS GAME is a framework and a collection of text-based games written in the [Ruby](http://www.ruby-lang.org/) 1.9 programming language.
+
+If you find a bug, feel free to [create an issue](https://github.com/jacksonwillis/srs_game/issues/new).
 
 Installation
 ------------
@@ -25,8 +27,8 @@ Playing the game
 
 Just execute the file!
 
-    $ ruby lib/srs_game/tamera.rb   # Play as the goddess Tamera
-    $ ruby lib/srs_game/tia.rb      # Play as a follower of the Cult of Tia
+    $ lib/srs_game/tamera.rb   # Play as the goddess Tamera
+    $ lib/srs_game/tia.rb      # Play as a follower of the Cult of Tia
 
 ### With Rake
 
