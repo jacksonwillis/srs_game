@@ -3,25 +3,31 @@
 # This file is part of SRS GAME <http://github.com/jacksonwillis/srs_game/>.
 
 $LOAD_PATH.unshift File.expand_path("../../../lib", __FILE__)
-
-require "cucumber/formatter/unicode"
 require "srs_game"
-
-Before do
-end
-
-After do
-end
+include SRSGame
 
 Given /I have a room/ do
-  @location = SRSGame::Location.new
+  @location = L.new
+end
+
+Given /I have an example room with blank rooms in each direction/ do
+  @location = L.new
+  L.directions.each { |dir| @location.__send__("#{dir}=", L.new) }
 end
 
 And /I added an item to the room/ do
-  @item = SRSGame::Item.new
+  @item = I.new
   @location.items << @item
 end
 
 Then /the room should contain an item/ do
   @location.items.include? @item
+end
+
+Then /the room to west of east room is the main room/ do
+  @location.eql? @location.west.east
+end
+
+Then /the room's exits include all directions/ do
+  @location.exits.eql? L.directions
 end
