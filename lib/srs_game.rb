@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 # This file is part of SRS GAME <http://github.com/jacksonwillis/srs_game/>.
 
+require "set"
 require "zlib"
 require "base64"
 require "readline"
