@@ -48,7 +48,7 @@ To test, just run
 
     $ rake cucumber
 
-or check out the [automated tests](https://travis-ci.org/jacksonwillis/srs_game).
+or check out the [automated tests](https://secure.travis-ci.org/jacksonwillis/srs_game).
 
 Extension
 ---------
