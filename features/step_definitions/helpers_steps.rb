@@ -2,10 +2,14 @@
 # -*- coding: UTF-8 -*-
 # This file is part of SRS GAME <http://github.com/jacksonwillis/srs_game/>.
 
-Given /^I have a value (.*)$/ do |v|
-  @value = eval(v)
+Given /^I have a value (.*)$/ do |value|
+  @value = eval(value)
 end
 
-Then /^its blankness should match (.*)$/ do |arg1|
-  @value.blank?.should == eval(arg1)
+When /^I parse the string into arguments/ do
+  @result = @value.args
+end
+
+Then /^it should return (.*)$/ do |value|
+  @result.should == eval(value)
 end

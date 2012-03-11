@@ -84,6 +84,7 @@ class String
   # Turn the string in to an array of arguments.
   # It tries to convert words into booleans and floats. Example:
   #     "3.14 yes gaga false".args #=> [3.14, true, "gaga", false]
+  # @return [Array]
   def args
     strip!
 
@@ -97,16 +98,20 @@ class String
     end # map
   end # def args
 
+  # Is self.args unempty?
+  # @return [Boolean]
   def args?
     !args.empty?
   end # def args
 
   # Scans the string for groups of non-whitespace characters.
+  # @return [Array]
   def words
     scan(/\S+/)
   end # def words
 
   # Removes the first group of non-whitespace characters.
+  # @return [String]
   def remove_first_word
     gsub(/^\S+\s*/, "")
   end # def remove_first_word
@@ -317,6 +322,7 @@ module SRSGame
       attr_reader :env
 
       # Add what we are seeding to <tt>@env</tt>
+      # @param [Hash] seed
       def seed(seed)
         @env ||= default_settings
         @env << seed
@@ -324,6 +330,7 @@ module SRSGame
       end # def seed
 
       # <tt>S[:foo]</tt> is the same as <tt>S.env["FOO"]</tt>
+      # @param [String, Symbol, #to_s] key
       def [](key)
         @env[key.to_s.upcase]
       end # def []

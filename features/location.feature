@@ -10,14 +10,19 @@ Feature: Locations
     Given I have a room
     When I add blank rooms in each direction
     Then the room to <a> of the <b> room is the main room
-    And the room's exits include all directions
 
-  Examples:
-    | a     | b     |
-    | east  | west  |
-    | up    | down  |
-    | south | north |
-    | out   | in    |
+    Examples:
+      | a     | b     |
+      | east  | west  |
+      | up    | down  |
+      | south | north |
+      | out   | in    |
+      | down  | up    |
+
+  Scenario: Inspect a room's exits
+    Given I have a room
+    When I add blank rooms in each direction
+    Then the room's exits include all directions
 
   Scenario: Add an item to a room
     Given I have a room

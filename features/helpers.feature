@@ -4,12 +4,17 @@
 
 Feature: Helpers
 
-  Scenario Outline: Blankness
-   Given I have a value <value>
-   Then its blankness should match <blankness>
+  Scenario Outline: Parsing arguments
+   Given I have a value <string>
+   When I parse the string into arguments
+   Then it should return <parsed>
 
-  Examples:
-    | value        | blankness       |
-    | 2            | false           |
-    | []           | true            |
-    | 1            | false           |
+    Examples:
+      | string                      | parsed                              |
+      | "  3.14 yes gaga false    " | [3.14, true, "gaga", false]         |
+      | " true 3 no words         " | [true, 3.0, false, "words"]         |
+      | "these words pass tests"    | ["these", "words", "pass", "tests"] |
+      | "             HAIL SITHIS " | ["HAIL", "SITHIS"]                  |
+      | "         f               " | [false]                             |
+      | "\"\" ' ' '              ." | ["\"\"", "'", "'", "'", "."]        |
+      | "                         " | []                                  |
