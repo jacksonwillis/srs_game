@@ -12,11 +12,6 @@ include Term::ANSIColor
 
 # Methods for every object
 class Object
-  # Words that become true when to_bool is called
-  TRUE_WORDS = %w{t true yes y}
-  # Words that become false when to_bool is called
-  FALSE_WORDS = %w{f false no n}
-
   # Returns true if false, nil, or self.empty?
   def blank?
     respond_to?(:empty?) ? empty? : !self
@@ -26,13 +21,6 @@ class Object
   def unblank?
     !self.blank?
   end # def unblank?
-
-  # Convert to boolean value
-  def to_bool
-    dc = to_s.downcase
-    if TRUE_WORDS.include?(dc) then true
-    elsif FALSE_WORDS.include?(dc) then false end # if
-  end # def to_bool
 
   # Can the string be converted to a boolean value?
   def boolean?
@@ -76,6 +64,18 @@ class Object
 end # class Object
 
 class String
+  # Words that become true when to_bool is called
+  TRUE_WORDS = %w{t true yes y}
+  # Words that become false when to_bool is called
+  FALSE_WORDS = %w{f false no n}
+
+  # Convert to boolean value
+  def to_bool
+    dc = to_s.downcase
+    if TRUE_WORDS.include?(dc) then true
+    elsif FALSE_WORDS.include?(dc) then false end # if
+  end # def to_bool
+
   # Does the string represent a numeral in Ruby?
   def numeric?
     !!Float(self) rescue false
