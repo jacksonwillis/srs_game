@@ -15,7 +15,7 @@ If you find a bug, feel free to [create an issue](https://github.com/jacksonwill
 Installation
 ------------
 
-    $ git clone git@github.com:jacksonwillis/srs_game.git
+    $ git clone git://github.com/jacksonwillis/srs_game.git
     $ cd srs_game
     $ gem install bundler
     $ bundle install
