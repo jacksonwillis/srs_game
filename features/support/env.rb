@@ -5,7 +5,7 @@
 require "cucumber/formatter/unicode"
 require "rspec/expectations"
 
-$LOAD_PATH.unshift(File.expand_path(__FILE__ + "../../../../lib"))
+$LOAD_PATH.unshift File.expand_path("../../../lib", __FILE__)
 
 require "srs_game"
 include SRSGame
