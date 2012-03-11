@@ -340,8 +340,8 @@ module SRSGame
     def self.default_settings
       {
         "GREETING_SPEED" => 20,
-        "SAYS_HOWDY_PARTNER" => false,
-        "MATCHES_SHORT_METHODS" => true
+        "SAYS_HOWDY_PARTNER" => "false",
+        "MATCHES_SHORT_METHODS" => "true"
       }
     end # def self.default_settings
   end # class Settings
