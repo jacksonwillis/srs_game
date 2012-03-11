@@ -46,7 +46,7 @@ Testing
 
 To test, just run
 
-    $ rake features
+    $ rake cucumber
 
 or check out the [automated tests](https://travis-ci.org/jacksonwillis/srs_game).
 

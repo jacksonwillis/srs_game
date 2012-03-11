@@ -2,13 +2,10 @@
 # -*- coding: UTF-8 -*-
 # This file is part of SRS GAME <http://github.com/jacksonwillis/srs_game/>.
 
-$LOAD_PATH.unshift File.expand_path("lib")
-
 require "rake"
-require "cucumber/rake/task"
-require "srs_game"
 
-Cucumber::Rake::Task.new(:features)
+$LOAD_PATH.unshift File.expand_path("lib")
+require "srs_game"
 
 namespace :play do
   desc "Play as a follower of the Cult of Tia"
@@ -24,4 +21,6 @@ namespace :play do
   end
 end
 
-task :default => "features"
+require "cucumber/rake/task"
+Cucumber::Rake::Task.new
+task :default => :cucumber
