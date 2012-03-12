@@ -20,19 +20,10 @@ Installation
 Playing the game
 ----------------
 
-### Without Rake
-
-Just execute the file!
-
-    $ lib/srs_game/tamera.rb   # Play as the goddess Tamera
-    $ lib/srs_game/tia.rb      # Play as a follower of the Cult of Tia
-
-### With Rake
-
     $ rake play:tamera   # Play as the goddess Tamera
     $ rake play:tia      # Play as a follower of the Cult of Tia
 
-SRS GAME, with Rake, takes arguments on the command line. For example:
+SRS GAME, takes arguments on the command line. For example:
 
     $ rake play:tamera SAYS_HOWDY_PARTNER=true
 
