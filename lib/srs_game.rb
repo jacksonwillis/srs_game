@@ -221,10 +221,10 @@ module SRSGame
            :name,
            :takeable
 
-    # Defaults
-    name            "Item"
+               # Defaults
+               name "Item"
     interactable_as :item
-    takeable        false
+           takeable false
 
     def to_s
       name
@@ -234,7 +234,7 @@ module SRSGame
   # SRSGame::I is a shortcut for SRSGame::Item
   I = Item
 
-  class Location; end # :nodoc:
+  class Location; end
   # SRSGame::L is a shortcut for SRSGame::Location
   L = Location
 
@@ -333,7 +333,7 @@ module SRSGame
     end
   end
 
-  class Settings; end; # :nodoc:
+  class Settings; end;
   # SRSGame::S is a shortcut for SRSGame::Settings
   S = Settings
 
@@ -348,7 +348,7 @@ module SRSGame
         @env ||= default_settings
         @env << seed
         self
-      end # def seed
+      end
 
       # +S[:foo]+ is the same as +S.env["FOO"]+
       # @param [String, Symbol, #to_s] key
@@ -360,8 +360,8 @@ module SRSGame
     # SRS GAME's default settings
     def self.default_settings
       {
-        "GREETING_SPEED" => 20,
-        "SAYS_HOWDY_PARTNER" => "false",
+        "GREETING_SPEED"        => 20,
+        "SAYS_HOWDY_PARTNER"    => "false",
         "MATCHES_SHORT_METHODS" => "true"
       }
     end
@@ -439,10 +439,9 @@ module SRSGame
 
       # Display help text
       def _help(r)
-        puts "For help on a specific command, use `man [command]'".red.strikethrough + " " + "COMING SOON".underline
         puts "For a list of all commands, use `help --all'"
         puts "All available commands:\n#{callable_methods.map(&:command_pp).to_sentence(:bold => true)}" if r =~ /--all/
-      end # def _help
+      end
 
       # Alias commands
       alias :_quit :_exit
@@ -467,7 +466,7 @@ module SRSGame
     if S[:matches_short_methods].to_bool
       completion_proc = proc { |s| command.matching_methods(s).map(&:command_pp) }
       Readline.completion_proc = completion_proc
-    end # if
+    end
 
     @last_room = nil
 
