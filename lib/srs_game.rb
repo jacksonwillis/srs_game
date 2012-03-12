@@ -219,12 +219,14 @@ module SRSGame
   class Item < Traitable
     traits :interactable_as, # TODO: rename this trait
            :name,
+           :description,
            :takeable
 
-               # Defaults
-               name "Item"
+    # Defaults
     interactable_as :item
-           takeable false
+    name "an Item"
+    description ""
+    takeable false
 
     def to_s
       name
@@ -281,7 +283,11 @@ module SRSGame
     end
 
     def item_grep(str)
-      @items.select { |item| item.interactable_as.to_s =~ Regexp.new(str, :i) }
+      @items.select { |item| str == item.interactable_as.to_s.downcase }
+    end
+
+    def items_here
+      "Items here are #{@items.map(&:to_s).to_sentence(:bold => true)}."
     end
 
     # We have to create our own setter methods to do the mirrored direction relationships
@@ -323,7 +329,7 @@ module SRSGame
     def info
       o = "You find yourself #{@name}. "
       o << "#{@description}. " if @description.unblank?
-      o << "\nItems here are #{@items.map(&:to_s).to_sentence(:bold => true)}." if @items.unblank?
+      o << "\n" << items_here if @items.unblank?
       o << "\nExits are #{exits.to_sentence(:bold => true)}." if exits.unblank?
       o
     end
@@ -428,13 +434,23 @@ module SRSGame
 
       # Prints $room.info
       def _look(r)
-        puts $room.info
+        case r
+        when /^\s*$/i
+          puts $room.info
+        else
+          _look_item(r)
+        end
       end
 
       # Look at items
       def _look_item(r)
-        puts "Room's items: #{$room.items}"
-        puts "Items that match #{r.inspect}: #{$room.item_grep(r)}"
+        found = $room.item_grep(r)
+
+        if found.empty?
+          puts $room.items_here
+        else
+          found.each { |item| puts "You see #{item.name.bold}. " }
+        end
       end
 
       # Display help text
