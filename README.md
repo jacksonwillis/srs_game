@@ -15,7 +15,7 @@ If you find a bug, feel free to [create an issue](https://github.com/jacksonwill
 Installation
 ------------
 
-_Main article:_ [Installation](https://github.com/jacksonwillis/srs_game/wiki/Installation)
+*Main article: [Installation](https://github.com/jacksonwillis/srs_game/wiki/Installation)*
 
     $ git clone git://github.com/jacksonwillis/srs_game.git
     $ cd srs_game
