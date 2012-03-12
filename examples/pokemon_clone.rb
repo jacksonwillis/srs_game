@@ -9,10 +9,12 @@ include SRSGame
 module PokemonClone
   class Computer < Item
     interactable_as :computer
+    name "red's computer"
   end
 
   class Bed < Item
     interactable_as :bed
+    name "YOUR BED"
   end
 
   def greeting
@@ -43,7 +45,7 @@ module PokemonClone
     "         ;    :`*-._L.-'`-.    :\n" << \
     "         :    ;            `-.*\n" << \
     "          \\  /\n" << \
-    "           \"\" ~* PokemonClone.rb *~"
+    "           \"\" ~* PokemonClone.rb *~\n"
   end
 
   def main_room
@@ -54,7 +56,6 @@ module PokemonClone
     room = house.in.up.north = L.new(:name => "at the threshold your room")
     room.north = L.new(:name => "standing in the middle of your room", :items => [Bed.new])
     room.north.west = L.new(:name => "at your computer", :items => [Computer.new])
-    room.north.east = L.new(:name => "in your neatly made single bed")
 
     house.south = L.new(:name => "at the Pallet Town plaza")
     house
