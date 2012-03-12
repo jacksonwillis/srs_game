@@ -327,7 +327,7 @@ module SRSGame
 
     # Information displayed when a room is entered.
     def info
-      o = "You find yourself #{@name}. "
+      o = "You find yourself #{@name.bold}. "
       o << "#{@description}. " if @description.unblank?
       o << "\n" << items_here if @items.unblank?
       o << "\nExits are #{exits.to_sentence(:bold => true)}." if exits.unblank?
@@ -490,7 +490,7 @@ module SRSGame
       $room.enter unless $room.eql? @last_room
       @last_room = $room
 
-      input = Readline.readline("$ ", true)
+      input = Readline.readline("$ ".bold.blue, true)
 
       command.parse(input) unless input.blank?
     end
