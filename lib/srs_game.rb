@@ -23,9 +23,9 @@ class Object
     !self.blank?
   end
 
-  # Removes "_" from beginning of line
+  # Removes "_" from beginning of line and dowmcases it
   def command_pp
-    to_s.gsub(/^_/, "")
+    to_s.gsub(/^_/, "").downcase
   end
 
   # From ActiveSupport[http://api.rubyonrails.org/classes/Array.html#method-i-to_sentence].
