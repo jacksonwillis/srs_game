@@ -22,11 +22,6 @@ class Object
     !self.blank?
   end # def unblank?
 
-  # Can the string be converted to a boolean value?
-  def boolean?
-    !to_bool.nil?
-  end # def is_boolean?
-
   # Removes "_" from beginning of line
   def command_pp
     to_s.gsub(/^_/, "")
@@ -70,13 +65,21 @@ class String
   FALSE_WORDS = %w{f false no n}
 
   # Convert to boolean value
+  # @return [Boolean, nil]
   def to_bool
     dc = to_s.downcase
     if TRUE_WORDS.include?(dc) then true
     elsif FALSE_WORDS.include?(dc) then false end # if
   end # def to_bool
 
+  # Can the string be converted to a boolean value?
+  # @return [Boolean]
+  def boolean?
+    !to_bool.nil?
+  end # def is_boolean?
+
   # Does the string represent a numeral in Ruby?
+  # @return [Boolean]
   def numeric?
     !!Float(self) rescue false
   end # def numeric?
