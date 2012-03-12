@@ -2,7 +2,6 @@
 # -*- coding: UTF-8 -*-
 # This file is part of SRS GAME <http://github.com/jacksonwillis/srs_game/>.
 
-require "set"
 require "zlib"
 require "base64"
 require "readline"
@@ -10,22 +9,24 @@ require "term/ansicolor"
 
 include Term::ANSIColor
 
-# Methods for every object
 class Object
-  # Returns true if false, nil, or self.empty?
+  # Returns true for false, nil, and empty values.
+  # Returns false otherwise.
+  # @return [Boolean]
   def blank?
     respond_to?(:empty?) ? empty? : !self
-  end # blank?
+  end
 
   # Opposite of Object#blank?
+  # @return [Boolean]
   def unblank?
     !self.blank?
-  end # def unblank?
+  end
 
   # Removes "_" from beginning of line
   def command_pp
     to_s.gsub(/^_/, "")
-  end # def command_pp
+  end
 
   # From ActiveSupport[http://api.rubyonrails.org/classes/Array.html#method-i-to_sentence].
   # Converts the array to a comma-separated sentence where the last element is joined by the connector word. Options:
@@ -33,17 +34,18 @@ class Object
   # * :two_words_connector:: - The sign or word used to join the elements in arrays with two elements (default: " and ")
   # * :last_word_connector:: - The sign or word used to join the last element in arrays with three or more elements (default: ", and ")
   # * :bold:: - Bolds the elements being joined. (default: false)
-
+  # @return [String]
   def to_sentence(options = {})
-    words_connector = options[:words_connector] ||  ", "
+    words_connector     = options[:words_connector]     || ", "
     two_words_connector = options[:two_words_connector] || " and "
     last_word_connector = options[:last_word_connector] || ", and "
 
     if options[:bold]
-      return to_sentence Array[self] unless respond_to? :map!
+      respond_to? :map! or return to_sentence Array[self]
+
       map!(&:to_s)
       map!(&:bold)
-    end # if
+    end
 
     case length
     when 0
@@ -54,9 +56,9 @@ class Object
       "#{self[0]}#{two_words_connector}#{self[1]}"
     else
       "#{self[0...-1].join(words_connector)}#{last_word_connector}#{self[-1]}"
-    end # case
-  end # def to_sentence
-end # class Object
+    end
+  end
+end
 
 class String
   # Words that become true when to_bool is called
@@ -68,89 +70,96 @@ class String
   # @return [Boolean, nil]
   def to_bool
     dc = to_s.downcase
-    if TRUE_WORDS.include?(dc) then true
-    elsif FALSE_WORDS.include?(dc) then false end # if
-  end # def to_bool
+
+    if TRUE_WORDS.include?(dc)
+      true
+    elsif FALSE_WORDS.include?(dc)
+      false
+    # return nil if neither case is matched
+    end
+  end
 
   # Can the string be converted to a boolean value?
   # @return [Boolean]
   def boolean?
     !to_bool.nil?
-  end # def is_boolean?
+  end
 
   # Does the string represent a numeral in Ruby?
   # @return [Boolean]
   def numeric?
     !!Float(self) rescue false
-  end # def numeric?
+  end
 
   # Turn the string in to an array of arguments.
   # It tries to convert words into booleans and floats. Example:
   #     "3.14 yes gaga false".args #=> [3.14, true, "gaga", false]
   # @return [Array]
   def args
-    strip!
-
-    words.map do |arg|
-      arg = arg.to_s
+    strip.words.map do |arg|
       next if arg.empty?
 
-      if arg.boolean? then arg.to_bool
-      elsif arg.numeric? then Float(arg)
-      else arg end # if
-    end # map
-  end # def args
+      if arg.boolean?
+        arg.to_bool
+      elsif arg.numeric?
+        Float(arg)
+      else
+        arg
+      end
+    end
+  end
 
   # Is self.args unempty?
   # @return [Boolean]
   def args?
     !args.empty?
-  end # def args
+  end
 
   # Scans the string for groups of non-whitespace characters.
   # @return [Array]
   def words
     scan(/\S+/)
-  end # def words
+  end
 
   # Removes the first group of non-whitespace characters.
   # @return [String]
   def remove_first_word
     gsub(/^\S+\s*/, "")
-  end # def remove_first_word
-end # class String
+  end
+end
 
 class Hash
   # Add two hashes. Does not overwrite pre-existing values.
+  # @return [Hash]
   def +(add)
     temp = {}
     add.each { |k, v| temp[k] = v}
     self.each { |k, v| temp[k] = v}
     temp
-  end # def +
+  end
 
   # Add two hashes. Overwrites pre-existing values, and is destructive.
+  # @return [Hash]
   def <<(add)
     temp = {}
     self.each { |k, v| temp[k] = v}
     add.each { |k,v| temp[k] = v}
     replace temp
-  end # def <<
-end # class Hash
+  end
+end
 
-# The main SRS GAME namespace
 module SRSGame
   # Helpful methods that are included throught out the project
   module Helpers
     # Compress and base64 encode a string
     def base64_zlib_deflate(s)
       Base64.encode64(Zlib::Deflate.deflate(s, Zlib::BEST_COMPRESSION))
-    end # def base64_zlib_deflate
+    end
 
     # Base64 decode and decompress and a string
     def base64_zlib_inflate(s)
       Zlib::Inflate.inflate(Base64.decode64(s))
-    end # def base64_zlib_inflate
+    end
 
     # Output a string, colorfully.
     def rainbow_say(str)
@@ -163,11 +172,11 @@ module SRSGame
           colors.rotate!
         else
           print line
-        end # if
+        end
         sleep 1.0 / greeting_speed
-      end # each_line
-    end # def rainbow_say
-  end # module Helpers
+      end
+    end
+  end
 
   include Helpers
 
@@ -194,78 +203,82 @@ module SRSGame
         end # instance_eval
       end # each
 
-      # 3. For each monster, the `initialize' method
+      # 3. For each traitable object, the `initialize' method
       #    should use the default number for each trait.
       class_eval do
         define_method( :initialize ) do
           self.class.traits.each do |k,v|
             instance_variable_set("@#{k}", v)
-          end # each
-        end # define_method
-      end # class_eval
+          end
+        end
+      end
 
-    end # def self.traits
-  end # class Traitable
+    end
+  end
 
-  # Any non-monster you can interact with in the game
   class Item < Traitable
-    traits :interactable_as, :name
-
-    # Name of the item
-    def to_s
-      name
-    end # def to_s
+    traits :interactable_as, # TODO: rename this trait
+           :name,
+           :takeable
 
     # Defaults
-    name "Item"
+    name            "Item"
     interactable_as :item
-  end # class Item
+    takeable        false
+
+    def to_s
+      name
+    end
+  end
 
   # SRSGame::I is a shortcut for SRSGame::Item
   I = Item
 
-  class Location; end; # :nodoc:
+  class Location; end # :nodoc:
   # SRSGame::L is a shortcut for SRSGame::Location
   L = Location
 
-  # Anywhere you can 'go' in the game
   class Location
-    # Directions and their opposites
+    # Title of the room (default: "a room")
+    attr_accessor :name
+
+    # Description of the item. Displayed when the name is regarded.
+    attr_accessor :description
+
+    # Items available in the room. Stored in @items.
+    attr_accessor :items
+
+    # Called on initialization
+    attr_accessor :block
+
+    # Block called every time room is entered.
+    attr_reader :on_enter
+
+    def initialize(params = {}, &block)
+             @name = params[:name] || "a room"
+      @description = params[:description].to_s
+            @items = params[:items].to_a
+            @block = block # @block is called on initialization
+         @on_enter = nil
+         @on_leave = nil
+
+      @block.call(self) if block
+    end
+
     def self.direction_relationships
       [["north", "south"], ["east", "west"], ["up", "down"], ["in", "out"]]
-    end # def self.direction_relationships
+    end
 
-    # Directions and their opposites and their opposites and their opposites
     def self.mirrored_directions
       direction_relationships + direction_relationships.map { |a| a.reverse }
-    end # def self.mirrored_directions
+    end
 
     # All directions available
     def self.directions
       direction_relationships.flatten
-    end # def self.directions
+    end
 
-    # Title of the room (default: "a room")
-    attr_accessor :name
-    # Description of the item. Displayed when the name is regarded.
-    attr_accessor :description
-    # Items available in the room. Stored in @items.
-    attr_accessor :items
-    attr_accessor :block
     attr_reader(*L.directions)
-    # Block called every time room is entered.
-    attr_reader :on_enter
-
-    # &block(self) is called on initialization
-    def initialize(params = {}, &block)
-      @name = params[:name] or "a room"
-      @description = params[:description].to_s
-      @items = params[:items].to_a.to_set or Set.new
-      @block = block # @block is called on initialization
-      @on_enter, @on_leave = nil
-
-      @block.call(self) if block
-    end # def initialize
 
     # We have to create our own setter methods to do the mirrored direction relationships
     L.mirrored_directions.each do |dir|
@@ -276,30 +289,31 @@ module SRSGame
         # _direction is @direction
         _direction = instance_variable_get("@" + direction)
         _direction.__send__(opposite + "=", self) unless _direction.__send__(opposite)
-      end # define_method
-    end # each
+      end
+    end
 
-    # Available directions (where __send__(dir) is truthy)
+    # Available exits
+    # @return [Array]
     def exits
       L.directions.select { |dir| __send__(dir) }
-    end # def exits
+    end
 
-    # Set <tt>@on_enter</tt> to &b
+    # Set +@on_enter+ to +&b+
     def on_enter(&b) @on_enter = b end
 
-    # Set <tt>@on_leave</tt> to &b
+    # Set +@on_leave+ to +&b+
     def on_leave(&b) @on_leave = b end
 
-    # Call <tt>@on_enter</tt>
+    # Call +@on_enter+
     def enter
       puts info
-      @on_enter.call(self) if @on_enter
-    end # def enter
+      @on_enter and @on_enter.call(self)
+    end
 
-    # Call <tt>@on_leave</tt>
+    # Call +@on_leave+
     def leave
       @on_leave.call(self) if @on_leave
-    end # def leave
+    end
 
     # Information displayed when a room is entered.
     def info
@@ -308,12 +322,12 @@ module SRSGame
       o << "\nItems here are #{@items.map(&:to_s).to_sentence(:bold => true)}." if @items.unblank?
       o << "\nExits are #{exits.to_sentence(:bold => true)}." if exits.unblank?
       o
-    end # def info
+    end
 
     def to_s
       "#<SRSGame::Location #{@name.inspect} @items=#{@items.inspect} exits=#{exits.inspect}>"
-    end # def to_s
-  end # class Location
+    end
+  end
 
   class Settings; end; # :nodoc:
   # SRSGame::S is a shortcut for SRSGame::Settings
@@ -332,12 +346,12 @@ module SRSGame
         self
       end # def seed
 
-      # <tt>S[:foo]</tt> is the same as <tt>S.env["FOO"]</tt>
+      # +S[:foo]+ is the same as +S.env["FOO"]+
       # @param [String, Symbol, #to_s] key
       def [](key)
         @env[key.to_s.upcase]
-      end # def []
-    end # class << self
+      end
+    end
 
     # SRS GAME's default settings
     def self.default_settings
@@ -346,23 +360,23 @@ module SRSGame
         "SAYS_HOWDY_PARTNER" => "false",
         "MATCHES_SHORT_METHODS" => "true"
       }
-    end # def self.default_settings
-  end # class Settings
+    end
+  end
 
-  # Class methods beginning with `<tt>_</tt>' are available as commands during the game
+  # Class methods beginning with `+_+' are available as commands during the game
   class Commands
     class << self
       # Called when a non-existing command is entered during the game
       def method_missing(m, a)
         puts "#{self}::#{m.downcase}: not found".red
-      end # def method_missing
+      end
 
-      # Methods that start with `<tt>_</tt>' and don't end with `<tt>_</tt>'
+      # Methods that start with `+_+' and don't end with `+_+'
       def callable_methods
         methods.grep(/^_\w+[^_]$/)
-      end # def callable_methods
+      end
 
-      # From GoRuby link:https://github.com/ruby/ruby/blob/trunk/golf_prelude.rb
+      # From GoRuby https://github.com/ruby/ruby/blob/trunk/golf_prelude.rb
       def matching_methods(s='', m=callable_methods)
         # build a regex which starts with ^ (beginning)
         # take every letter of the method_name
@@ -378,10 +392,10 @@ module SRSGame
         #  and sort them by the least matches of the "fill" regex groups
         m.grep(r).sort_by do |i|
           i.to_s.match(r).captures.map(&:size) << i
-        end # sort_by
-      end # def matching_methods
+        end
+      end
 
-      # Parse input and <tt>__send__</tt> it
+      # Parse input and +__send__+ it
       def parse(input)
         method = input.words.first
         argument_string = input.remove_first_word
@@ -394,16 +408,14 @@ module SRSGame
 
       # Define all directions as commands
       L.directions.each do |dir|
-
         define_method("_#{dir}") do |args|
           if $room.exits.include?(dir)
             $room = $room.__send__(dir)
           else
             puts "NOPE. Can't go that way."
-          end # if
-        end # define_method
-
-      end # each
+          end
+        end
+      end
 
       # Quit the game
       def _exit(r)
@@ -431,8 +443,8 @@ module SRSGame
       # Alias commands
       alias :_quit :_exit
       alias :_? :_help
-    end # class << self
-  end # class Commands
+    end
+  end
 
   # Main loop
   def self.play(middleware, env = {})
@@ -462,6 +474,6 @@ module SRSGame
       input = Readline.readline("$ ", true)
 
       command.parse(input) unless input.blank?
-    end # loop
-  end # def self.play
-end # module SRSGame
+    end
+  end
+end
