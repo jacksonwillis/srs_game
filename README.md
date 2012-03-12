@@ -27,7 +27,7 @@ SRS GAME, takes arguments on the command line. For example:
 
     $ rake play:tamera SAYS_HOWDY_PARTNER=true
 
-The default settings are defined in [Settings::default_settings](https://rdoc.info/github/jacksonwillis/srs_game/master/SRSGame/Settings.default_settings).
+The default settings are defined in [Settings::default_settings](http://rdoc.info/github/jacksonwillis/srs_game/master/SRSGame/Settings.default_settings).
 
 Testing
 -------
