@@ -15,6 +15,8 @@ If you find a bug, feel free to [create an issue](https://github.com/jacksonwill
 Installation
 ------------
 
+_Main article:_ [Installation](https://github.com/jacksonwillis/srs_game/wiki/Installation)
+
     $ git clone git://github.com/jacksonwillis/srs_game.git
     $ cd srs_game
     $ gem install bundler
@@ -29,7 +31,6 @@ Just execute the file!
 
     $ lib/srs_game/tamera.rb   # Play as the goddess Tamera
     $ lib/srs_game/tia.rb      # Play as a follower of the Cult of Tia
-
 ### With Rake
 
     $ rake play:tamera   # Play as the goddess Tamera
