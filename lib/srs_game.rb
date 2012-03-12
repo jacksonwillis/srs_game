@@ -239,6 +239,21 @@ module SRSGame
   L = Location
 
   class Location
+    def self.direction_relationships
+      [["north", "south"], ["east", "west"], ["up", "down"], ["in", "out"]]
+    end
+
+    def self.mirrored_directions
+      direction_relationships + direction_relationships.map { |a| a.reverse }
+    end
+
+    # All directions available
+    def self.directions
+      direction_relationships.flatten
+    end
+
+    attr_reader(*L.directions)
+
     # Title of the room (default: "a room")
     attr_accessor :name
 
@@ -265,20 +280,9 @@ module SRSGame
       @block.call(self) if block
     end
 
-    def self.direction_relationships
-      [["north", "south"], ["east", "west"], ["up", "down"], ["in", "out"]]
+    def item_grep(str)
+      @items.select { |item| item.interactable_as.to_s =~ Regexp.new(str, :i) }
     end
-
-    def self.mirrored_directions
-      direction_relationships + direction_relationships.map { |a| a.reverse }
-    end
-
-    # All directions available
-    def self.directions
-      direction_relationships.flatten
-    end
-
-    attr_reader(*L.directions)
 
     # We have to create our own setter methods to do the mirrored direction relationships
     L.mirrored_directions.each do |dir|
@@ -430,7 +434,7 @@ module SRSGame
       # Look at items
       def _look_item(r)
         puts "Room's items: #{$room.items}"
-        puts "Items that match #{r.inspect}: #{$room.items.select { |item| item.interactable_as.to_s =~ Regexp.new(r, :i) }}"
+        puts "Items that match #{r.inspect}: #{$room.item_grep(r)}"
       end
 
       # Display help text
