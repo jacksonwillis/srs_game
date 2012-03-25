@@ -4,3 +4,4 @@ tmp
 *.save
 .rbx
 .yardoc
+Gemfile.lock

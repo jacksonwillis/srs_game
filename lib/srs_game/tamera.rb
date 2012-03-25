@@ -18,16 +18,49 @@ module SRSGame::Tamera
     interactable_as :crystal
   end
 
+  class Radio < Item
+    name "an AM/FM Radio"
+    interactable_as :radio
+  end
+
   # Room where you begin in
   def main_room
-    main = L.new(:name => "the Main Room")
-    main.east = L.new(:name => "the East Room", :items => [BallaAssSpoon.new, CrystalBall.new])
-    main.east.south = L.new(:name => "a creepy dungeon")
-    main.east.south.south = L.new(:name => "Hell") { |room| room.on_enter { rainbow_say "Welcome\nto\nHell!\n" * 8 } }
-    main.west = L.new(:name => "the West Room")
-    main.west.west = L.new(:name => "the Far West Room")
-    main.west.west.north = L.new(:name => "the North West Room")
-    main
+    # TODO: Store this information in a better way.
+
+    main = \
+      L.new(
+        name: "in the Main Room",
+        items: [Radio.new])
+
+    main.east = \
+      L.new(
+        name: "in the East Room",
+        items: [BallaAssSpoon.new, CrystalBall.new])
+
+    dungeon = \
+      main.east.south = \
+        L.new(
+          name: "a creepy dungeon")
+
+    dungeon.south = \
+      L.new(
+        name: "Hell")
+
+    west_room = \
+      main.west = \
+        L.new(
+          name: "the West Room")
+
+    far_west = \
+      west_room.west = \
+        L.new(
+          name: "the Far West Room")
+
+    far_west.north = \
+      L.new(
+        name: "the North West Room")
+
+    return main
   end
 
   # Emitted before the game starts

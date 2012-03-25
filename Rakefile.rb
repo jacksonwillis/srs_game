@@ -4,42 +4,23 @@
 
 require "rake"
 
-################
-# Cucumber     #
-################
-
-require "cucumber/rake/task"
-
-namespace :cuke do
-  Cucumber::Rake::Task.new(:run) do |task|
-    task.cucumber_opts = ["features"]
-  end
-end
-
-################
-# Play         #
-################
-
 $LOAD_PATH.unshift File.expand_path("lib")
 require "srs_game"
-include SRSGame
 
 namespace :play do
   desc "Play as a follower of the Cult of Tia"
   task :tia do
     require "srs_game/tia"
-    SRSGame.play Tia, ENV
+    SRSGame.play SRSGame::Tia, ENV
   end
 
   desc "Play as the goddess Tamera"
   task :tamera do
     require "srs_game/tamera"
-    SRSGame.play Tamera, ENV
+    SRSGame.play SRSGame::Tamera, ENV
   end
 end
 
-################
-# Default      #
-################
-
-task :default => "cuke:run"
+require "cucumber/rake/task"
+Cucumber::Rake::Task.new
+task :default => :cucumber
