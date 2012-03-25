@@ -3,7 +3,7 @@ SRS GAME
 
 [![Build Status](https://secure.travis-ci.org/jacksonwillis/srs_game.png?branch=master)](https://secure.travis-ci.org/jacksonwillis/srs_game)
 
-![SRS GAME logo](https://github.com/jacksonwillis/srs_game/raw/master/srs_game.png)
+![SRS GAME logo](http://cloud.github.com/downloads/jacksonwillis/srs_game/srs_game.png)
 
 Welcome
 -------
