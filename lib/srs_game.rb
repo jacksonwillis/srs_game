@@ -149,6 +149,8 @@ class Hash
 end
 
 module SRSGame
+  class DirectionError < ::ArgumentError; end
+
   # Helpful methods that are included throught out the project
   module Helpers
     # Compress and base64 encode a string
@@ -334,6 +336,11 @@ module SRSGame
       o
     end
 
+    def go(direction)
+      raise DirectionError, "Can't go #{direction} from #{@name}." unless L.directions.include?(direction)
+      __send__(direction)
+    end
+
     def to_s
       "#<SRSGame::Location #{@name.inspect} @items=#{@items.inspect} exits=#{exits.inspect}>"
     end
@@ -377,7 +384,7 @@ module SRSGame
   class Commands
     class << self
       # Called when a non-existing command is entered during the game
-      def method_missing(m, a, g)
+      def method_missing(m, *a)
         puts "#{self}::#{m.downcase}: not found".red
       end
 
@@ -406,10 +413,10 @@ module SRSGame
       end
 
       # Parse input and +__send__+ it
-      def parse(input)
+      def parse(input, game)
         method = input.words.first
         argument_string = input.remove_first_word
-        __send__("_" + method.command_pp, argument_string)
+        __send__("_" + method.command_pp, argument_string, game)
       end
 
       #################################
@@ -417,12 +424,12 @@ module SRSGame
       #################################
 
       # Define all directions as commands
-      L.directions.each do |dir|
-        define_method("_#{dir}") do |args|
-          if $room.exits.include?(dir)
-            $room = $room.__send__(dir)
-          else
-            puts "NOPE. Can't go that way."
+      L.directions.each do |direction|
+        define_method("_#{direction}") do |a, g|
+          begin
+            g.go!(direction)
+          rescue DirectionError => e
+            e
           end
         end
       end
@@ -436,7 +443,7 @@ module SRSGame
       def _look(a, g)
         case a
         when /^\s*$/i
-          puts $room.info
+          puts g.room.info
         else
           _look_item(a)
         end
@@ -444,10 +451,10 @@ module SRSGame
 
       # Look at items
       def _look_item(a, g)
-        found = $room.item_grep(a)
+        found = g.room.item_grep(a)
 
         if found.empty?
-          puts $room.items_here
+          puts g.room.items_here
         else
           found.each { |item| puts "You see #{item.name.bold}. " }
         end
@@ -466,7 +473,43 @@ module SRSGame
   end
 
   class Game
+    attr_accessor :room
 
+    def initialize(middleware)
+      raise "No middleware for SRSGame.play" unless middleware
+      extend middleware
+
+      @room = main_room
+      #@travel_path = [@room]
+      @command = middleware.const_get(:Commands)
+    end
+
+    def go!(direction)
+      @room = @room.go(direction)
+    end
+
+    #def current_room
+    #  @travel_path[-1]
+    #end
+
+    #def last_room
+    #  @travel_path[-2]
+    #end
+
+    #def same_room?
+    #  current_room.eql? last_room
+    #end
+
+    def send(input)
+      @command.parse(input, self) unless input.blank?
+    end
+
+    def play
+      loop do
+        input = Readline.readline("$ ".bold.blue, true)
+        send(input) unless input.blank?
+      end
+    end
   end
 
   # Main loop
