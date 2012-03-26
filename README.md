@@ -23,12 +23,6 @@ Playing the game
     $ rake play:tamera   # Play as the goddess Tamera
     $ rake play:tia      # Play as a follower of the Cult of Tia
 
-SRS GAME, takes arguments on the command line. For example:
-
-    $ rake play:tamera SAYS_HOWDY_PARTNER=true
-
-The default settings are defined in [Settings::default_settings](http://rdoc.info/github/jacksonwillis/srs_game/master/SRSGame/Settings.default_settings).
-
 Testing
 -------
 
@@ -38,15 +32,21 @@ To test, just run
 
 or check out the [automated tests](https://secure.travis-ci.org/jacksonwillis/srs_game).
 
-Extension
----------
+API
+---
 
-Check out
-SRSGame::Tamera
-([Github](https://github.com/jacksonwillis/srs_game/blob/master/lib/srs_game/tamera.rb),
-   [RDoc](http://rubydoc.info/github/jacksonwillis/srs_game/master/SRSGame/Tamera))
-and [examples/pokemon_clone.rb](https://github.com/jacksonwillis/srs_game/blob/master/examples/pokemon_clone.rb)
-for examples of playable modules.
+    irb > require "srs_game/tamera"
+     => true
+    irb > game = Game.new(Tamera, color: false)
+     => #<SRSGame::Game:0x000000022fa380>
+    irb > game.send "look"
+     => "You find yourself in the Main Room.\nItems here are an AM/FM Radio.\nExits are east and west."
+    irb > game.send "north"
+     => "NOPE. Can't go that way."
+    irb > game.send "west"
+     => ""
+    irb > game.room
+     => #<SRSGame::Location "the West Room" @items=[] exits=["east", "west"]>
 
 License
 -------
