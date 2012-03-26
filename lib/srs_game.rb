@@ -413,7 +413,7 @@ module SRSGame
   class Game
     attr_accessor :room
 
-    def initialize(mod)
+    def initialize(mod, options = {})
       raise ArgumentError, "Can't use #{middleware} for SRSGame middleware" unless mod.is_a? Module
       extend mod
 
@@ -446,10 +446,10 @@ module SRSGame
       @command.parse(input, self) unless input.blank?
     end
 
-    def play
+    def play(io)
       loop do
-        input = Readline.readline(prompt, true)
-        send(input) unless input.blank?
+        input = io.readline(prompt, true)
+        io.puts send(input) unless input.blank?
       end
     end
   end
@@ -464,7 +464,7 @@ module SRSGame
     end
 
     def serve(io)
-      game = Game.new(@mod)
+      game = Game.new(@mod, direct: false)
 
       loop do
         io.print game.prompt

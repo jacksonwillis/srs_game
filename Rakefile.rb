@@ -4,21 +4,19 @@
 
 $LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
 require "srs_game"
-include SRSGame
-
 require "rake"
 
 namespace :play do
   desc "Play as a follower of the Cult of Tia"
   task :tia do
     require "srs_game/tia"
-    Game.new(Tia).play
+    Game.new(Tia).play($stdout)
   end
 
   desc "Play as the goddess Tamera"
   task :tamera do
     require "srs_game/tamera"
-    Game.new(Tamera).play
+    Game.new(Tamera).play($stdout)
   end
 end
 
