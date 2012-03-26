@@ -468,7 +468,8 @@ module SRSGame
 
       loop do
         io.print game.prompt
-        io.puts game.send(io.readline)
+        input = io.readline
+        io.puts game.send(input) unless input.blank?
       end
     end
 
