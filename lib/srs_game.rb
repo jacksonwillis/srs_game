@@ -303,8 +303,11 @@ module SRSGame
     end
 
     def go(direction)
-      raise DirectionError, "Can't go #{direction} from #{@name}." unless L.directions.include?(direction)
-      __send__(direction)
+      if L.directions.include?(direction)
+        __send__(direction)
+      else
+        raise DirectionError, "Can't go #{direction} from #{@name}."
+      end
     end
 
     def to_s
