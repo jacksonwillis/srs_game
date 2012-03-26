@@ -2,22 +2,23 @@
 # -*- coding: UTF-8 -*-
 # This file is part of SRS GAME <http://github.com/jacksonwillis/srs_game/>.
 
-require "rake"
-
-$LOAD_PATH.unshift File.expand_path("lib")
+$LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
 require "srs_game"
+include SRSGame
+
+require "rake"
 
 namespace :play do
   desc "Play as a follower of the Cult of Tia"
   task :tia do
     require "srs_game/tia"
-    SRSGame.play SRSGame::Tia, ENV
+    Game.new(Tia).play
   end
 
   desc "Play as the goddess Tamera"
   task :tamera do
     require "srs_game/tamera"
-    SRSGame.play SRSGame::Tamera, ENV
+    Game.new(Tamera).play
   end
 end
 
