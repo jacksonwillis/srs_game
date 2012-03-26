@@ -465,6 +465,10 @@ module SRSGame
     end
   end
 
+  class Game
+
+  end
+
   # Main loop
   def self.play(middleware, env = {})
     raise "No middleware for SRSGame.play" unless middleware
