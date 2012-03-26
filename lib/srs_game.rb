@@ -257,31 +257,14 @@ module SRSGame
     end
 
     attr_reader(*L.directions)
-
-    # Title of the room (default: "a room")
     attr_accessor :name
-
-    # Description of the item. Displayed when the name is regarded.
     attr_accessor :description
-
-    # Items available in the room. Stored in @items.
     attr_accessor :items
 
-    # Called on initialization
-    attr_accessor :block
-
-    # Block called every time room is entered.
-    attr_reader :on_enter
-
     def initialize(params = {}, &block)
-             @name = params[:name] || "a room"
+      @name        = params[:name] || "a room"
       @description = params[:description].to_s
-            @items = params[:items].to_a
-            @block = block # @block is called on initialization
-         @on_enter = nil
-         @on_leave = nil
-
-      @block.call(self) if block
+      @items       = params[:items].to_a
     end
 
     def item_grep(str)
@@ -310,23 +293,6 @@ module SRSGame
       L.directions.select { |dir| __send__(dir) }
     end
 
-    # Set +@on_enter+ to +&b+
-    def on_enter(&b) @on_enter = b end
-
-    # Set +@on_leave+ to +&b+
-    def on_leave(&b) @on_leave = b end
-
-    # Call +@on_enter+
-    def enter
-      puts info
-      @on_enter and @on_enter.call(self)
-    end
-
-    # Call +@on_leave+
-    def leave
-      @on_leave.call(self) if @on_leave
-    end
-
     # Information displayed when a room is entered.
     def info
       o = "You find yourself #{@name.bold}. "
@@ -343,40 +309,6 @@ module SRSGame
 
     def to_s
       "#<SRSGame::Location #{@name.inspect} @items=#{@items.inspect} exits=#{exits.inspect}>"
-    end
-  end
-
-  class Settings; end;
-  # SRSGame::S is a shortcut for SRSGame::Settings
-  S = Settings
-
-  # Game settings are stored in Settings.env
-  class Settings
-    class << self
-      attr_reader :env
-
-      # Add what we are seeding to <tt>@env</tt>
-      # @param [Hash] seed
-      def seed(seed)
-        @env ||= default_settings
-        @env << seed
-        self
-      end
-
-      # +S[:foo]+ is the same as +S.env["FOO"]+
-      # @param [String, Symbol, #to_s] key
-      def [](key)
-        @env[key.to_s.upcase]
-      end
-    end
-
-    # SRS GAME's default settings
-    def self.default_settings
-      {
-        "GREETING_SPEED"        => 20,
-        "SAYS_HOWDY_PARTNER"    => "false",
-        "MATCHES_SHORT_METHODS" => "true"
-      }
     end
   end
 
@@ -509,37 +441,6 @@ module SRSGame
         input = Readline.readline("$ ".bold.blue, true)
         send(input) unless input.blank?
       end
-    end
-  end
-
-  # Main loop
-  def self.play(middleware, env = {})
-    raise "No middleware for SRSGame.play" unless middleware
-    extend middleware
-
-    Settings.seed(env)
-
-    rainbow_say(greeting)
-
-    $room = main_room
-    command = middleware.const_get(:Commands)
-
-    Readline.completion_append_character = " "
-    puts "Howdy, partner!" if S[:says_howdy_partner].to_s.to_bool
-    if S[:matches_short_methods].to_bool
-      completion_proc = proc { |s| command.matching_methods(s).map(&:command_pp) }
-      Readline.completion_proc = completion_proc
-    end
-
-    @last_room = nil
-
-    loop do
-      $room.enter unless $room.eql? @last_room
-      @last_room = $room
-
-      input = Readline.readline("$ ".bold.blue, true)
-
-      command.parse(input) unless input.blank?
     end
   end
 end
