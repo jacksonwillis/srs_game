@@ -25,40 +25,35 @@ module SRSGame::Tamera
 
   # Room where you begin in
   def main_room
-    # TODO: Store this information in a better way.
+    main = L.new do |l|
+      l.name = "in the Main Room",
+      l.items = [Radio.new]
+    end
 
-    main = \
-      L.new(
-        name: "in the Main Room",
-        items: [Radio.new])
+    main.east = L.new do |l|
+      l.name = "in the East Room",
+      l.items = [BallaAssSpoon.new, CrystalBall.new]
+    end
 
-    main.east = \
-      L.new(
-        name: "in the East Room",
-        items: [BallaAssSpoon.new, CrystalBall.new])
+    dungeon = main.east.south = L.new do |l|
+      l.name = "a creepy dungeon"
+    end
 
-    dungeon = \
-      main.east.south = \
-        L.new(
-          name: "a creepy dungeon")
+    dungeon.south = L.new do |l|
+      l.name = "Hell"
+    end
 
-    dungeon.south = \
-      L.new(
-        name: "Hell")
+    west_room = main.west = L.new do |l|
+      l.name = "the West Room"
+    end
 
-    west_room = \
-      main.west = \
-        L.new(
-          name: "the West Room")
+    far_west = west_room.west = L.new do |l|
+      l.name = "the Far West Room"
+    end
 
-    far_west = \
-      west_room.west = \
-        L.new(
-          name: "the Far West Room")
-
-    far_west.north = \
-      L.new(
-        name: "the North West Room")
+    far_west.north = L.new do |l|
+      l.name = "the North West Room"
+    end
 
     return main
   end
