@@ -377,7 +377,7 @@ module SRSGame
   class Commands
     class << self
       # Called when a non-existing command is entered during the game
-      def method_missing(m, a)
+      def method_missing(m, a, g)
         puts "#{self}::#{m.downcase}: not found".red
       end
 
@@ -428,23 +428,23 @@ module SRSGame
       end
 
       # Quit the game
-      def _exit(r)
+      def _exit(a, g)
         exit
       end
 
       # Prints $room.info
-      def _look(r)
-        case r
+      def _look(a, g)
+        case a
         when /^\s*$/i
           puts $room.info
         else
-          _look_item(r)
+          _look_item(a)
         end
       end
 
       # Look at items
-      def _look_item(r)
-        found = $room.item_grep(r)
+      def _look_item(a, g)
+        found = $room.item_grep(a)
 
         if found.empty?
           puts $room.items_here
@@ -454,9 +454,9 @@ module SRSGame
       end
 
       # Display help text
-      def _help(r)
+      def _help(a, g)
         puts "For a list of all commands, use `help --all'"
-        puts "All available commands:\n#{callable_methods.map(&:command_pp).to_sentence(:bold => true)}" if r =~ /--all/
+        puts "All available commands:\n#{callable_methods.map(&:command_pp).to_sentence(:bold => true)}" if a =~ /--all/
       end
 
       # Alias commands
