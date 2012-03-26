@@ -265,6 +265,8 @@ module SRSGame
       @name        = params[:name] || "a room"
       @description = params[:description].to_s
       @items       = params[:items].to_a
+
+      block.call(self)
     end
 
     def item_grep(str)
