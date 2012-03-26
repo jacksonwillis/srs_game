@@ -50,7 +50,7 @@ module PokemonClone
 
   def main_room
     house = L.new(:name => "outside your house")
-    house.in = L.new(:name => "in your living room", :on_enter => -> { puts "Your mother greets you: \"Good morning, Red!\"" })
+    house.in = L.new(:name => "in your living room")
     house.in.up = L.new(:name => "at the top of your stairs")
 
     room = house.in.up.north = L.new(:name => "at the threshold your room")
