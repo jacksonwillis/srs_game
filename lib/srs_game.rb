@@ -5,6 +5,7 @@
 require "zlib"
 require "base64"
 require "readline"
+require "gserver"
 require "term/ansicolor"
 
 include Term::ANSIColor
@@ -322,7 +323,7 @@ module SRSGame
     class << self
       # Called when a non-existing command is entered during the game
       def method_missing(m, *a)
-        puts "#{self}::#{m.downcase}: not found".red
+        "#{self}::#{m.downcase}: not found".red
       end
 
       # Methods that start with `+_+' and don't end with `+_+'
@@ -380,7 +381,7 @@ module SRSGame
       def _look(a, g)
         case a
         when /^\s*$/i
-          puts g.room.info
+          g.room.info
         else
           _look_item(a)
         end
@@ -391,9 +392,9 @@ module SRSGame
         found = g.room.item_grep(a)
 
         if found.empty?
-          puts g.room.items_here
+          g.room.items_here
         else
-          found.each { |item| puts "You see #{item.name.bold}. " }
+          found.each { |item| puts "You see #{item.name.bold}. " }.join("\n")
         end
       end
 
@@ -412,13 +413,13 @@ module SRSGame
   class Game
     attr_accessor :room
 
-    def initialize(middleware)
-      raise "No middleware for SRSGame.play" unless middleware
-      extend middleware
+    def initialize(mod)
+      raise ArgumentError, "Can't use #{middleware} for SRSGame middleware" unless mod.is_a? Module
+      extend mod
 
       @room = main_room
       #@travel_path = [@room]
-      @command = middleware.const_get(:Commands)
+      @command = mod.const_get(:Commands)
     end
 
     def go!(direction)
@@ -437,15 +438,45 @@ module SRSGame
     #  current_room.eql? last_room
     #end
 
+    def prompt
+      "$ ".bold.blue
+    end
+
     def send(input)
       @command.parse(input, self) unless input.blank?
     end
 
     def play
       loop do
-        input = Readline.readline("$ ".bold.blue, true)
+        input = Readline.readline(prompt, true)
         send(input) unless input.blank?
       end
+    end
+  end
+
+  class SRServer < GServer
+    # ♫ 54-46 was my number ♫
+    DEFAULT_PORT = 54_46
+
+    def initialize(mod, port = DEFAULT_PORT, *args)
+      @mod = mod
+      super(port, *args)
+    end
+
+    def serve(io)
+      game = Game.new(@mod)
+
+      loop do
+        io.print game.prompt
+        io.puts game.send(io.readline)
+      end
+    end
+
+    def self.play(*args)
+      server = new(*args)
+      server.audit = true
+      server.start
+      server.join
     end
   end
 end
