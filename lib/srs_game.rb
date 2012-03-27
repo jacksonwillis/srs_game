@@ -137,7 +137,8 @@ class IO
 end
 
 module SRSGame
-  class DirectionError < ::ArgumentError; end
+  class DirectionError < ::TypeError; end
+  class DONE_WITH_SRS_GAME < ::SystemExit; end
 
   # From Dwemthy's Array by _why the lucky stiff
   # http://mislav.uniqpath.com/poignant-guide/dwemthy/
@@ -312,7 +313,7 @@ module SRSGame
 
       # Quit the game
       def _exit(a, g)
-        exit
+        raise DONE_WITH_SRS_GAME
       end
 
       # Prints $room.info
@@ -387,10 +388,14 @@ module SRSGame
     def play
       Readline.completion_append_character = " "
 
-      loop do
-        Readline.completion_proc = proc { |match| @command.matching_methods(match).map(&:command_pp) }
-        input = Readline.readline(prompt, true)
-        puts send(input) unless input.blank?
+      begin
+        loop do
+          Readline.completion_proc = proc { |match| @command.matching_methods(match).map(&:command_pp) }
+          input = Readline.readline(prompt, true)
+          puts send(input) unless input.blank?
+        end
+      rescue DONE_WITH_SRS_GAME
+        puts "\nHave a nice day!"
       end
     end
   end
@@ -407,10 +412,14 @@ module SRSGame
     def serve(io)
       game = Game.new(@mod, direct: false)
 
-      loop do
-        io.print game.prompt
-        input = io.readline
-        io.puts game.send(input) unless input.blank?
+      begin
+        loop do
+          io.print game.prompt
+          input = io.readline
+          io.puts game.send(input) unless input.blank?
+        end
+      rescue DONE_WITH_SRS_GAME
+        io.puts "\nHave a nice day!"
       end
     end
 
