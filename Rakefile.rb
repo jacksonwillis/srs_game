@@ -10,13 +10,13 @@ namespace :play do
   desc "Play as a follower of the Cult of Tia"
   task :tia do
     require "srs_game/tia"
-    Game.new(Tia).play($stdout)
+    Game.new(Tia).play
   end
 
   desc "Play as the goddess Tamera"
   task :tamera do
     require "srs_game/tamera"
-    Game.new(Tamera).play($stdout)
+    Game.new(Tamera).play
   end
 end
 

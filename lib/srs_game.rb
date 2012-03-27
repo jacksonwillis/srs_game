@@ -11,20 +11,15 @@ require "term/ansicolor"
 include Term::ANSIColor
 
 class Object
-  # Returns true for false, nil, and empty values.
-  # Returns false otherwise.
-  # @return [Boolean]
   def blank?
     respond_to?(:empty?) ? empty? : !self
   end
 
-  # Opposite of Object#blank?
-  # @return [Boolean]
   def unblank?
     !self.blank?
   end
 
-  # Removes "_" from beginning of line and dowmcases it
+  # Removes "_" from beginning of line and downcases it
   def command_pp
     to_s.gsub(/^_/, "").downcase
   end
@@ -42,7 +37,7 @@ class Object
     last_word_connector = options[:last_word_connector] || ", and "
 
     if options[:bold]
-      respond_to? :map! or return to_sentence Array[self]
+      return to_sentence Array[self] unless respond_to? :map!
 
       map!(&:to_s)
       map!(&:bold)
@@ -62,12 +57,10 @@ class Object
 end
 
 class String
-  # Words that become true when to_bool is called
   TRUE_WORDS = %w{t true yes y}
-  # Words that become false when to_bool is called
   FALSE_WORDS = %w{f false no n}
 
-  # Convert to boolean value
+  # Convert to boolean value matching TRUE_WORDS or FALSE_WORDS
   # @return [Boolean, nil]
   def to_bool
     dc = to_s.downcase
@@ -76,7 +69,6 @@ class String
       true
     elsif FALSE_WORDS.include?(dc)
       false
-    # return nil if neither case is matched
     end
   end
 
@@ -129,59 +121,23 @@ class String
   end
 end
 
-class Hash
-  # Add two hashes. Does not overwrite pre-existing values.
-  # @return [Hash]
-  def +(add)
-    temp = {}
-    add.each { |k, v| temp[k] = v}
-    self.each { |k, v| temp[k] = v}
-    temp
-  end
+class IO
+  def rainbow_say(str, greeting_speed = 50)
+    colors = [:red, :yellow, :green, :cyan, :blue, :magenta].cycle
 
-  # Add two hashes. Overwrites pre-existing values, and is destructive.
-  # @return [Hash]
-  def <<(add)
-    temp = {}
-    self.each { |k, v| temp[k] = v}
-    add.each { |k,v| temp[k] = v}
-    replace temp
+    str.each_line do |line|
+      if line =~ /\S/
+        print line.__send__(colors.next)
+      else
+        print line
+      end
+      sleep 1.0 / greeting_speed
+    end
   end
 end
 
 module SRSGame
   class DirectionError < ::ArgumentError; end
-
-  # Helpful methods that are included throught out the project
-  module Helpers
-    # Compress and base64 encode a string
-    def base64_zlib_deflate(s)
-      Base64.encode64(Zlib::Deflate.deflate(s, Zlib::BEST_COMPRESSION))
-    end
-
-    # Base64 decode and decompress and a string
-    def base64_zlib_inflate(s)
-      Zlib::Inflate.inflate(Base64.decode64(s))
-    end
-
-    # Output a string, colorfully.
-    def rainbow_say(str)
-      greeting_speed = S[:greeting_speed].to_f
-      colors = [:red, :yellow, :green, :cyan, :blue, :magenta]
-
-      str.each_line do |line|
-        if line =~ /\S/
-          print line.__send__(colors[0])
-          colors.rotate!
-        else
-          print line
-        end
-        sleep 1.0 / greeting_speed
-      end
-    end
-  end
-
-  include Helpers
 
   # From Dwemthy's Array by _why the lucky stiff
   # http://mislav.uniqpath.com/poignant-guide/dwemthy/
@@ -235,9 +191,6 @@ module SRSGame
       name
     end
   end
-
-  # SRSGame::I is a shortcut for SRSGame::Item
-  I = Item
 
   class Location; end
   # SRSGame::L is a shortcut for SRSGame::Location
@@ -331,23 +284,8 @@ module SRSGame
         methods.grep(/^_\w+[^_]$/)
       end
 
-      # From GoRuby https://github.com/ruby/ruby/blob/trunk/golf_prelude.rb
-      def matching_methods(s='', m=callable_methods)
-        # build a regex which starts with ^ (beginning)
-        # take every letter of the method_name
-        #   insert "(.*?)" instead, which means: match anything and take the smallest match
-        #   and insert the letter itself (but escape regex chars)
-        #
-        # for example s='matz'
-        # => /^(.*?)m(.*?)a(.*?)t(.*?)z/
-        #
-        r=/^#{s.to_s.gsub(/./){"(.*?)"+Regexp.escape($&)}}/
-
-        # match all available methods for this regex
-        #  and sort them by the least matches of the "fill" regex groups
-        m.grep(r).sort_by do |i|
-          i.to_s.match(r).captures.map(&:size) << i
-        end
+      def matching_methods(match)
+        callable_methods.grep(/^_#{match}/)
       end
 
       # Parse input and +__send__+ it
@@ -446,10 +384,13 @@ module SRSGame
       @command.parse(input, self) unless input.blank?
     end
 
-    def play(io)
+    def play
+      Readline.completion_append_character = " "
+
       loop do
-        input = io.readline(prompt, true)
-        io.puts send(input) unless input.blank?
+        Readline.completion_proc = proc { |match| @command.matching_methods(match).map(&:command_pp) }
+        input = Readline.readline(prompt, true)
+        puts send(input) unless input.blank?
       end
     end
   end
