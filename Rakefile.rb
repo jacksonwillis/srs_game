@@ -24,13 +24,13 @@ namespace :server do
   desc "Telnet server for Tia"
   task :tia do
     require "srs_game/tia"
-    SRServer.play(Tia, ENV["PORT"], ENV["HOST"])
+    SRServer.play(Tia, ENV["PORT"], ENV["HOST"], ENV["MAX_CONNECTIONS"])
   end
 
   desc "Telnet server for Tamera"
   task :tamera do
     require "srs_game/tamera"
-    SRServer.play(Tamera, ENV["PORT"], ENV["HOST"])
+    SRServer.play(Tamera, ENV["PORT"], ENV["HOST"], ENV["MAX_CONNECTIONS"])
   end
 end
 
