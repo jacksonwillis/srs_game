@@ -221,7 +221,7 @@ module SRSGame
       @description = params[:description].to_s
       @items       = params[:items].to_a
 
-      block.call(self)
+      block.call(self) if block.respond_to? :call
     end
 
     def item_grep(str)
