@@ -26,5 +26,5 @@ Feature: Locations
 
   Scenario: Add an item to a room
     Given I have a room
-    When I added an item to the room
+    When I add an item to the room
     Then the room should contain an item

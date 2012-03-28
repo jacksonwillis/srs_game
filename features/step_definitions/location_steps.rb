@@ -11,8 +11,8 @@ When /I add blank rooms in each direction/ do
   L.directions.each { |dir| @location.__send__("#{dir}=", L.new) }
 end
 
-When /I added an item to the room/ do
-  @item = I.new
+When /I add an item to the room/ do
+  @item = Item.new
   @location.items << @item
 end
 
