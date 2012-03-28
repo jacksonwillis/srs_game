@@ -23,6 +23,11 @@ Playing the game
     $ rake play:tamera   # Play as the goddess Tamera
     $ rake play:tia      # Play as a follower of the Cult of Tia
 
+Running a server
+----------------
+
+    $ rake server:tamera HOST=127.0.0.1 PORT=5446 MAX_CONNECTIONS=4
+
 Testing
 -------
 
