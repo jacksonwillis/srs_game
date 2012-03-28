@@ -406,10 +406,14 @@ module SRSGame
   class SRServer < GServer
     # ♫ 54-46 was my number ♫
     DEFAULT_PORT = 54_46
+    MAX_CONNECTIONS = 4
 
-    def initialize(mod, port = DEFAULT_PORT, *args)
+    def initialize(mod, port, host, max_connections)
       @mod = mod
-      super(port, *args)
+      port ||= DEFAULT_PORT
+      host ||= DEFAULT_HOST
+      max_connections ||= MAX_CONNECTIONS
+      super(port, host, max_connections, $stderr, true, true)
     end
 
     def serve(io)
