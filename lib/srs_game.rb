@@ -434,6 +434,7 @@ module SRSGame
       server = new(*args)
       server.audit = true
       server.start
+      trap(:INT) { server.stop }
       server.join
     end
   end
