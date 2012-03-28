@@ -260,7 +260,7 @@ module SRSGame
     end
 
     def go(direction)
-      if L.directions.include?(direction)
+      if exits.include?(direction.to_s)
         __send__(direction)
       else
         raise DirectionError, "Can't go #{direction} from #{@name}."
@@ -293,7 +293,7 @@ module SRSGame
       def parse(input, game)
         method = input.words.first
         argument_string = input.remove_first_word
-        __send__("_" + method.command_pp, argument_string, game)
+        output = __send__("_" + method.command_pp, argument_string, game)
       end
 
       #################################
@@ -306,7 +306,7 @@ module SRSGame
           begin
             g.go!(direction)
           rescue DirectionError => e
-            e
+            return e
           end
         end
       end
@@ -356,13 +356,15 @@ module SRSGame
       raise ArgumentError, "Can't use #{middleware} for SRSGame middleware" unless mod.is_a? Module
       extend mod
 
+      @options = options
       @room = main_room
       #@travel_path = [@room]
       @command = mod.const_get(:Commands)
     end
 
     def go!(direction)
-      @room = @room.go(direction)
+      new_room = @room.go(direction)
+      @room = new_room
     end
 
     #def current_room
@@ -382,7 +384,8 @@ module SRSGame
     end
 
     def send(input)
-      @command.parse(input, self) unless input.blank?
+      output = @command.parse(input, self)
+      @options[:color] ? output : output.uncolored
     end
 
     def play
