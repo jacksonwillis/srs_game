@@ -33,5 +33,5 @@ Feature: Locations
   Scenario: Moving from room to room
     Given I have a basic game with no rooms
     When I add a room to the west called "West Side"
-    And I go west
+     And I go west
     Then the name of the room is "West Side"

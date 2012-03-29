@@ -2,6 +2,10 @@
 # -*- coding: UTF-8 -*-
 # This file is part of SRS GAME <http://github.com/jacksonwillis/srs_game/>.
 
+Before do
+  @error = nil
+end
+
 Given /I have a room/ do
   @room = Location.new
 end
@@ -29,7 +33,7 @@ When /I add a room to the (\w+) called "([^"]*)"/ do |direction, name|
 end
 
 When /I go (\w+)/ do |direction|
-  @room = @room.go direction
+    @room = @room.go direction
 end
 
 Then /the room should contain an item/ do

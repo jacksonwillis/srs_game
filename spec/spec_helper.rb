@@ -5,9 +5,6 @@
 require "simplecov"
 SimpleCov.start
 
-require "cucumber/formatter/unicode"
-require "rspec/expectations"
-
-$LOAD_PATH.unshift File.expand_path("../../../lib", __FILE__)
+$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 
 require "srs_game/basic"

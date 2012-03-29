@@ -352,7 +352,7 @@ module SRSGame
   class Game
     attr_accessor :room
 
-    def initialize(mod, options = {})
+    def initialize(mod = SRSGame::Basic, options = {})
       raise ArgumentError, "Can't use #{middleware} for SRSGame middleware" unless mod.is_a? Module
       extend mod
 
