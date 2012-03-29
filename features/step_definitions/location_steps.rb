@@ -17,13 +17,13 @@ When /I add an item to the room/ do
 end
 
 Then /the room should contain an item/ do
-  @location.items.include? @item
+  @location.items.should include @item
 end
 
 Then /the room to (\w+) of the (\w+) room is the main room/ do |direction, room|
-  @location == @location.__send__(room).__send__(direction)
+  @location.should eq @location.__send__(room).__send__(direction)
 end
 
 Then /the room's exits include all directions/ do
-  @location.exits == L.directions
+  @location.exits.should eq L.directions
 end
