@@ -31,10 +31,7 @@ Running a server
 Testing
 -------
 
-To test, just run
-
-    $ rake cucumber
-
+To test, just run `rake`
 or check out the [automated tests](https://secure.travis-ci.org/jacksonwillis/srs_game).
 
 API
