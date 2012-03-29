@@ -8,6 +8,6 @@ include SRSGame
 
 module SRSGame::Basic
   def main_room
-    L.new
+    Location.new
   end
 end
