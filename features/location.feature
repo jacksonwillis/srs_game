@@ -26,5 +26,12 @@ Feature: Locations
 
   Scenario: Add an item to a room
     Given I have a room
-    When I add an item to the room
+    Given I have an item
+    When I add the item to the room
     Then the room should contain an item
+
+  Scenario: Moving from room to room
+    Given I have a basic game with no rooms
+    When I add a room to the west called "West Side"
+    And I go west
+    Then the name of the room is "West Side"

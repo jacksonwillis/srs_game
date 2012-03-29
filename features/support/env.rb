@@ -12,3 +12,4 @@ $LOAD_PATH.unshift File.expand_path("../../../lib", __FILE__)
 
 require "srs_game"
 include SRSGame
+require "srs_game/basic"
