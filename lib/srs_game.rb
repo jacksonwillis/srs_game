@@ -238,7 +238,7 @@ module SRSGame
 
     # Information displayed when a room is entered.
     def info
-      o = "You find yourself #{@name.bold}. "
+      o = "You find yourself #{@name.bold}."
       o << "#{@description}. " if @description.unblank?
       o << "\n" << items_here if @items.unblank?
       o << "\nExits are #{exits.to_sentence(:bold => true)}." if exits.unblank?
@@ -317,7 +317,7 @@ module SRSGame
         if found.empty?
           g.room.items_here
         else
-          found.each { |item| puts "You see #{item.name.bold}. " }.join("\n")
+          found.each { |item| "You see #{item.name.bold}." }.join("\n")
         end
       end
 
@@ -336,7 +336,7 @@ module SRSGame
     attr_accessor :room
 
     def initialize(mod = SRSGame::Basic, options = {})
-      raise ArgumentError, "Can't use #{middleware} for SRSGame middleware" unless mod.is_a? Module
+      raise ArgumentError, "Can't use #{mod} for SRSGame module" unless mod.is_a? Module
       extend mod
 
       @options = options
@@ -345,9 +345,13 @@ module SRSGame
       @command = mod.const_get(:Commands)
     end
 
-    def go!(direction)
-      new_room = @room.go(direction)
-      @room = new_room
+    def go!(*directions)
+      if directions.size >= 2
+        directions.map { |dir| go! dir }
+      else
+        new_room = @room.go(directions[0])
+        @room = new_room
+      end
     end
 
     #def current_room
