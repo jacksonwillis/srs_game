@@ -40,7 +40,7 @@ API
     irb > require "srs_game/tamera"
      => true
     irb > game = Game.new(Tamera, color: false)
-     => #<SRSGame::Game:0x000000022fa380>
+     => #<SRSGame::Game:0x000000022f1337>
     irb > game.send "look"
      => "You find yourself in the Main Room.\nItems here are an AM/FM Radio.\nExits are east and west."
     irb > game.send "north"
