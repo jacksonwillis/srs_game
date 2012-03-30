@@ -35,9 +35,9 @@ namespace :server do
 end
 
 require "cucumber/rake/task"
-Cucumber::Rake::Task.new
+Cucumber::Rake::Task.new("test:cucumber")
 
 require "rspec/core/rake_task"
-RSpec::Core::RakeTask.new
+RSpec::Core::RakeTask.new("test:rspec")
 
-task :default => [:spec, :cucumber]
+task :default => ["test:rspec", "test:cucumber"]
