@@ -12,7 +12,11 @@ include Term::ANSIColor
 
 class Object
   def blank?
-    respond_to?(:empty?) ? empty? : !self
+    if respond_to?(:empty?)
+      empty?
+    else
+      !self
+    end
   end
 
   def unblank?
@@ -114,11 +118,7 @@ class IO
     colors = [:red, :yellow, :green, :cyan, :blue, :magenta].cycle
 
     str.each_line do |line|
-      if line =~ /\S/
-        print line.__send__(colors.next)
-      else
-        print line
-      end
+      print (line =~ /\S/ ? line.__send__(colors.next) : line)
       sleep 1.0 / greeting_speed
     end
   end
@@ -239,7 +239,7 @@ module SRSGame
     # Information displayed when a room is entered.
     def info
       o = "You find yourself #{@name.bold}."
-      o << "#{@description}. " if @description.unblank?
+      o << " #{@description}" if @description.unblank?
       o << "\n" << items_here if @items.unblank?
       o << "\nExits are #{exits.to_sentence(:bold => true)}." if exits.unblank?
       o
@@ -277,9 +277,11 @@ module SRSGame
 
       # Parse input and +__send__+ it
       def parse(input, game)
-        method = input.words.first
-        argument_string = input.words[1..-1].join(" ")
-        output = __send__("_" + method.command_pp, argument_string, game)
+        method = input.words.first.command_pp
+
+        arguments = input.words[1..-1]
+
+        output = __send__("_#{method}", arguments.join(" "), game)
       end
 
       #################################
@@ -292,7 +294,7 @@ module SRSGame
           begin
             g.go!(direction)
           rescue DirectionError => e
-            return e
+            e
           end
         end
       end
@@ -305,19 +307,14 @@ module SRSGame
       def _look(a, g)
         if a.args.blank?
           g.room.info
-        else
-          _look_item(a, g)
-        end
-      end
+        else # We are looking for an item
+          found = g.room.item_grep(a)
 
-      # Look at items
-      def _look_item(a, g)
-        found = g.room.item_grep(a)
-
-        if found.empty?
-          g.room.items_here
-        else
-          found.each { |item| "You see #{item.name.bold}." }.join("\n")
+          if found.empty?
+            g.room.items_here # Didn't find what we were looking for
+          else
+            found.each { |item| "You see #{item.name.bold}." }.join("\n")
+          end
         end
       end
 
@@ -333,7 +330,7 @@ module SRSGame
   end
 
   class Game
-    attr_accessor :room
+    attr_accessor :room, :command
 
     def initialize(mod = SRSGame::Basic, options = {})
       raise ArgumentError, "Can't use #{mod} for SRSGame module" unless mod.is_a? Module
@@ -347,7 +344,7 @@ module SRSGame
 
     def go!(*directions)
       if directions.size >= 2
-        directions.map { |dir| go! dir }
+        directions.each { |dir| go! dir }
       else
         new_room = @room.go(directions[0])
         @room = new_room
@@ -396,11 +393,10 @@ module SRSGame
     DEFAULT_PORT = 54_46
     MAX_CONNECTIONS = 4
 
-    def initialize(mod, port, host, max_connections)
+    attr_reader :mod
+
+    def initialize(mod, port=DEFAULT_PORT, host=DEFAULT_HOST, max_connections=MAX_CONNECTIONS)
       @mod = mod
-      port ||= DEFAULT_PORT
-      host ||= DEFAULT_HOST
-      max_connections ||= MAX_CONNECTIONS
       super(port, host, max_connections, $stderr, true, true)
     end
 

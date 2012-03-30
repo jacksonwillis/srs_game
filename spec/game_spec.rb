@@ -23,4 +23,11 @@ describe SRSGame::Game do
       ->{game.go! :up, :out, :south}.should change {game.room}.from(basement).to(bus_stop)
     end
   end
+
+
+  describe "#_quit" do
+    it "quits" do
+      ->{Game.new.send "quit"}.should raise_error DONE_WITH_SRS_GAME
+    end
+  end
 end
