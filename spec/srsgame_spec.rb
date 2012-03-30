@@ -9,4 +9,16 @@ describe SRSGame::Game do
   it "has a room" do
     Game.new.room.should be_instance_of Location
   end
+
+  it "travels" do
+    game = Game.new
+
+    kitchen = Location.new
+    basement = Location.new { |l| l.up = kitchen }
+    sidewalk = Location.new { |l| l.in = kitchen }
+    bus_stop = Location.new { |l| l.north = sidewalk }
+
+    game.room = basement
+    -> { game.go! :up; game.go! :out; game.go! :south }.should change {game.room}.from(basement).to(bus_stop)
+  end
 end

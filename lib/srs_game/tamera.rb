@@ -26,12 +26,12 @@ module SRSGame::Tamera
   # Room where you begin in
   def main_room
     main = L.new do |l|
-      l.name = "in the Main Room",
+      l.name = "in the Main Room"
       l.items = [Radio.new]
     end
 
     main.east = L.new do |l|
-      l.name = "in the East Room",
+      l.name = "in the East Room"
       l.items = [BallaAssSpoon.new, CrystalBall.new]
     end
 

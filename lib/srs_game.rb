@@ -102,22 +102,10 @@ class String
     end
   end
 
-  # Is self.args unempty?
-  # @return [Boolean]
-  def args?
-    !args.empty?
-  end
-
   # Scans the string for groups of non-whitespace characters.
   # @return [Array]
   def words
     scan(/\S+/)
-  end
-
-  # Removes the first group of non-whitespace characters.
-  # @return [String]
-  def remove_first_word
-    gsub(/^\S+\s*/, "")
   end
 end
 
@@ -212,9 +200,7 @@ module SRSGame
     end
 
     attr_reader(*L.directions)
-    attr_accessor :name
-    attr_accessor :description
-    attr_accessor :items
+    attr_accessor :name, :description, :items
 
     def initialize(params = {}, &block)
       @name        = params[:name] || "a room"
@@ -292,7 +278,7 @@ module SRSGame
       # Parse input and +__send__+ it
       def parse(input, game)
         method = input.words.first
-        argument_string = input.remove_first_word
+        argument_string = input.words[1..-1].join(" ")
         output = __send__("_" + method.command_pp, argument_string, game)
       end
 
@@ -316,13 +302,11 @@ module SRSGame
         raise DONE_WITH_SRS_GAME
       end
 
-      # Prints $room.info
       def _look(a, g)
-        case a
-        when /^\s*$/i
+        if a.args.blank?
           g.room.info
         else
-          _look_item(a)
+          _look_item(a, g)
         end
       end
 
@@ -339,8 +323,7 @@ module SRSGame
 
       # Display help text
       def _help(a, g)
-        puts "For a list of all commands, use `help --all'"
-        puts "All available commands:\n#{callable_methods.map(&:command_pp).to_sentence(:bold => true)}" if a =~ /--all/
+        "All available commands:\n#{callable_methods.map(&:command_pp).to_sentence(:bold => true)}"
       end
 
       # Alias commands
@@ -380,7 +363,8 @@ module SRSGame
     #end
 
     def prompt
-      "$ ".bold.blue
+      pr = "$ ".bold.blue
+      @options[:color] ? pr : pr.uncolored
     end
 
     def send(input)
@@ -404,7 +388,7 @@ module SRSGame
   end
 
   class SRServer < GServer
-    # ♫ 54-46 was my number ♫
+    ## ♫ 54-46 was my number ♫ ##
     DEFAULT_PORT = 54_46
     MAX_CONNECTIONS = 4
 
