@@ -61,10 +61,8 @@ module PokemonClone
     house
   end
 
-  class Commands < SRSGame::Commands; end
-  class << Commands
-
+  class Commands < SRSGame::Commands
   end
 end
 
-SRSGame.play PokemonClone if __FILE__ == $0
+SRSGame::Game.new(PokemonClone, color: true).play if __FILE__ == $0

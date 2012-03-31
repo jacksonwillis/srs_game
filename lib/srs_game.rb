@@ -253,6 +253,14 @@ module SRSGame
       end
     end
 
+    def use_item(s, &block)
+      if (found = item_grep(s)).length == 1
+        block.call found[0]
+      else
+        items_here
+      end
+    end
+
     def to_s
       "#<SRSGame::Location #{@name.inspect} @items=#{@items.inspect} exits=#{exits.inspect}>"
     end
@@ -260,73 +268,65 @@ module SRSGame
 
   # Class methods beginning with `+_+' are available as commands during the game
   class Commands
-    class << self
-      # Called when a non-existing command is entered during the game
-      def method_missing(m, *a)
-        "#{self}::#{m.downcase}: not found".red
-      end
-
-      # Methods that start with `+_+' and don't end with `+_+'
-      def callable_methods
-        methods.grep(/^_\w+[^_]$/)
-      end
-
-      def matching_methods(match)
-        callable_methods.grep(/^_#{match}/)
-      end
-
-      # Parse input and +__send__+ it
-      def parse(input, game)
-        method = input.words.first.command_pp
-
-        arguments = input.words[1..-1]
-
-        output = __send__("_#{method}", arguments.join(" "), game)
-      end
-
-      #################################
-      # Methods available as commands #
-      #################################
-
-      # Define all directions as commands
-      L.directions.each do |direction|
-        define_method("_#{direction}") do |a, g|
-          begin
-            g.go!(direction)
-          rescue DirectionError => e
-            e
-          end
-        end
-      end
-
-      # Quit the game
-      def _exit(a, g)
-        raise DONE_WITH_SRS_GAME
-      end
-
-      def _look(a, g)
-        if a.args.blank?
-          g.room.info
-        else # We are looking for an item
-          found = g.room.item_grep(a)
-
-          if found.empty?
-            g.room.items_here # Didn't find what we were looking for
-          else
-            found.each { |item| "You see #{item.name.bold}." }.join("\n")
-          end
-        end
-      end
-
-      # Display help text
-      def _help(a, g)
-        "All available commands:\n#{callable_methods.map(&:command_pp).to_sentence(:bold => true)}"
-      end
-
-      # Alias commands
-      alias :_quit :_exit
-      alias :_? :_help
+    # Called when a non-existing command is entered during the game
+    def method_missing(m, *a)
+      "#{self.class}##{m.downcase}: not found".red
     end
+
+    # Methods that start with `+_+' and don't end with `+_+'
+    def callable_methods
+      methods.grep(/^_\w+[^_]$/)
+    end
+
+    def matching_methods(match)
+      callable_methods.grep(/^_#{match}/)
+    end
+
+    # Parse input and +__send__+ it
+    def parse(input, game)
+      method = input.words.first.command_pp
+
+      arguments = input.words[1..-1]
+
+      output = __send__("_#{method}", arguments.join(" "), game)
+    end
+
+    #################################
+    # Methods available as commands #
+    #################################
+
+    # Define all directions as commands
+    L.directions.each do |direction|
+      define_method("_#{direction}") do |a, g|
+        begin
+          g.go!(direction)
+        rescue DirectionError => e
+          e
+        end
+      end
+    end
+
+    # Quit the game
+    def _exit(a, g)
+      raise DONE_WITH_SRS_GAME
+    end
+
+    def _look(a, g)
+      if a.args.blank?
+        g.room.info
+      else # We are looking for an item
+        g.room.use_item(a) { |item| "You see #{item.name.bold}." }
+      end
+    end
+
+    # Display help text
+    def _help(a, g)
+      "All available commands:\n#{callable_methods.map(&:command_pp).to_sentence(:bold => true)}"
+    end
+
+    # Alias commands
+    alias :_quit :_exit
+    alias :_? :_help
   end
 
   class Game
@@ -339,7 +339,7 @@ module SRSGame
       @options = options
       @room = main_room
       #@travel_path = [@room]
-      @command = mod.const_get(:Commands)
+      @command = mod.const_get(:Commands).new
     end
 
     def go!(*directions)
