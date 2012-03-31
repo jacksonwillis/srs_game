@@ -10,7 +10,7 @@ require "term/ansicolor"
 
 include Term::ANSIColor
 
-$LOAD_PATH.unshift File.expand_path("./", __FILE)
+$LOAD_PATH.unshift File.expand_path("./", __FILE__)
 require "srs_game/version"
 require "srs_game/basic"
 

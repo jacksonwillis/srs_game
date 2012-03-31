@@ -6,6 +6,8 @@ $LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
 require "srs_game"
 require "rake"
 
+require "bundler/gem_tasks"
+
 namespace :play do
   desc "Play as a follower of the Cult of Tia"
   task :tia do
