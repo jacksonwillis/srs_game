@@ -2,7 +2,7 @@ SRS GAME
 ========
 
 [![Build Status](https://secure.travis-ci.org/jacksonwillis/srs_game.png?branch=master)](https://secure.travis-ci.org/jacksonwillis/srs_game)
-[![Dependency Status](https://gemnasium.com/USER/REPO.png)](https://gemnasium.com/USER/REPO)
+[![Dependency Status](https://gemnasium.com/jacksonwillis/srs_game.png)](https://gemnasium.com/jacksonwillis/srs_game)
 
 ![SRS GAME logo](https://github.com/downloads/jacksonwillis/srs_game/srs_game.png)
 
