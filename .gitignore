@@ -7,3 +7,4 @@ tmp
 Gemfile.lock
 coverage
 pkg
+*.gem

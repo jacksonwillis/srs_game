@@ -12,10 +12,11 @@ Gem::Specification.new do |gem|
   gem.summary       = "A framework and collection of text-based games"
   gem.homepage      = "http://github.com/jacksonwillis/srs_game"
 
-  gem.files         = `git ls-files`.split($\)
-  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
-  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
+  gem.files         = ["lib/srs_game/tia.rb", "lib/srs_game/tamera.rb", "lib/srs_game/version.rb", "lib/srs_game/basic.rb", "lib/srs_game.rb"]
   gem.name          = "srs_game"
   gem.require_paths = ["lib"]
   gem.version       = SRSGame::VERSION
+
+  gem.add_dependency("term-ansicolor", "~> 1.0.7")
+  gem.add_development_dependency("rake", "~> 0.9.2.2")
 end
