@@ -3,5 +3,5 @@
 # This file is part of SRS GAME <http://github.com/jacksonwillis/srs_game/>.
 
 module SRSGame
-  VERSION = "0.1.Alexis"
+  VERSION = "1.Alexis"
 end
