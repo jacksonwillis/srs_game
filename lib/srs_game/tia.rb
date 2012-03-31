@@ -4,4 +4,4 @@
 
 # Not yet implemented
 module SRSGame module Tia end end
-raise "SRSGame::Tia is not yet implemented."
+raise NotImplementedError, "SRSGame::Tia is not yet implemented."

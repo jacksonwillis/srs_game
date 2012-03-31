@@ -53,7 +53,7 @@ module PokemonClone
     house.in = L.new(:name => "in your living room")
     house.in.up = L.new(:name => "at the top of your stairs")
 
-    room = house.in.up.north = L.new(:name => "at the threshold your room")
+    room = house.in.up.north = L.new(:name => "at the threshold your beautiful room")
     room.north = L.new(:name => "standing in the middle of your room", :items => [Bed.new])
     room.north.west = L.new(:name => "at your computer", :items => [Computer.new])
 
