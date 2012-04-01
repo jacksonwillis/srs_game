@@ -16,18 +16,17 @@ If you find a bug, feel free to [create an issue](https://github.com/jacksonwill
 Installation
 ------------
 
-*Main article: [Installation](https://github.com/jacksonwillis/srs_game/wiki/Installation)*
+See [Installation](https://github.com/jacksonwillis/srs_game/wiki/Installation) at the wiki
 
 Playing the game
 ----------------
 
-    $ rake play:tamera   # Play as the goddess Tamera
-    $ rake play:tia      # Play as a follower of the Cult of Tia
+See [Playing the game](https://github.com/jacksonwillis/srs_game/wiki/Playing-the-game) at the wiki
 
 Running a server
 ----------------
 
-    $ rake server:tamera HOST=127.0.0.1 PORT=5446 MAX_CONNECTIONS=4
+See [Running a server](https://github.com/jacksonwillis/srs_game/wiki/Running-a-server) at the wiki
 
 Testing
 -------
@@ -37,6 +36,8 @@ or check out the [automated tests](https://secure.travis-ci.org/jacksonwillis/sr
 
 API
 ---
+
+See [API](https://github.com/jacksonwillis/srs_game/wiki/API) at the wiki
 
     irb > require "srs_game/tamera"
      => true
