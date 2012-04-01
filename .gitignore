@@ -6,3 +6,5 @@ tmp
 .yardoc
 Gemfile.lock
 coverage
+pkg
+*.gem
