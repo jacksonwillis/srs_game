@@ -11,31 +11,12 @@ Welcome
 
 SRS GAME is a framework and a collection of text-based games written in the [Ruby](http://www.ruby-lang.org/) 1.9 programming language.
 
-SRS GAME is currently at version [0.1.1](https://github.com/jacksonwillis/srs_game) on branch master,
-and [0.1.2-dev](https://github.com/jacksonwillis/srs_game/tree/development) on branch development.
+SRS GAME is currently at version [0.1.1](https://github.com/jacksonwillis/srs_game) (codename Alexis) on branch master,
+and [0.2.0-dev](https://github.com/jacksonwillis/srs_game/tree/development)  (codename Alice) on branch development.
 
 If you find a bug, feel free to [create an issue](https://github.com/jacksonwillis/srs_game/issues/new).
 
-Installation
-------------
-
-See [Installation](https://github.com/jacksonwillis/srs_game/wiki/Installation) at the wiki
-
-Playing the game
-----------------
-
-See [Playing the game](https://github.com/jacksonwillis/srs_game/wiki/Playing-the-game) at the wiki
-
-Running a server
-----------------
-
-See [Running a server](https://github.com/jacksonwillis/srs_game/wiki/Running-a-server) at the wiki
-
-Testing
--------
-
-To test, just run `rake`
-or check out the [automated tests](https://secure.travis-ci.org/jacksonwillis/srs_game).
+For more information, see the [wiki](https://github.com/jacksonwillis/srs_game/wiki/).
 
 API
 ---
