@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
   gem.files         = ["lib/srs_game/tia.rb", "lib/srs_game/tamera.rb", "lib/srs_game/version.rb", "lib/srs_game/basic.rb", "lib/srs_game.rb"]
   gem.name          = "srs_game"
   gem.require_paths = ["lib"]
-  gem.version       = "0.1.2-dev"
+  gem.version       = "0.1.1"
 
   gem.add_dependency("term-ansicolor", "~> 1.0.7")
   gem.add_development_dependency("rake", "~> 0.9.2.2")
