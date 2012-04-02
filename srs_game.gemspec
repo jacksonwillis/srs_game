@@ -14,5 +14,5 @@ Gem::Specification.new do |gem|
   gem.version       = "0.1.2"
 
   gem.add_dependency("term-ansicolor", "~> 1.0.7")
-  gem.add_development_dependency("rake", "~> 0.9.2.2")
+  gem.add_development_dependency("rake", "~> 0.9")
 end
