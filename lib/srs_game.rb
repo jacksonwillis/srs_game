@@ -215,7 +215,11 @@ module SRSGame
     end
 
     def item_grep(str)
-      @items.select { |item| str == item.interactable_as.to_s.downcase }
+      if str.blank?
+        []
+      else
+        @items.select { |item| str == item.interactable_as.to_s.downcase }
+      end
     end
 
     def items_here
@@ -316,10 +320,16 @@ module SRSGame
     end
 
     def _look(a, g)
-      if a.args.blank?
-        g.room.info
-      else # We are looking for an item
-        g.room.use_item(a) { |item| "You see #{item.name.bold}." }
+      g.room.use_item(a) { |item| "You see #{item.name.bold}." }
+    end
+    
+    def _use(a, g)
+      g.room.use_item(a) do |item|
+        if item.respond_to? :use
+          g.use
+        else
+          "Cannot use #{item.bold}.".red
+        end
       end
     end
 
